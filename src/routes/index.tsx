@@ -1,0 +1,453 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { Phone, CheckCircle2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ImagePlaceholder } from "@/components/site/ImagePlaceholder";
+import { GuaranteeBadge } from "@/components/site/GuaranteeBadge";
+import { AnniversaryBadge } from "@/components/site/AnniversaryBadge";
+import { ReviewsBar } from "@/components/site/ReviewsBar";
+import { TestimonialCarousel, type Testimonial } from "@/components/site/TestimonialCarousel";
+import { YearsIcon, DiagnosticsIcon, PricingIcon, SameDayIcon } from "@/components/site/icons/WhyChooseIcons";
+import { getServiceCategoryIcon, getServiceCategoryIconClassName } from "@/lib/service-category-icons";
+import {
+  listFeaturedServices,
+  listFeaturedProjects,
+  getSiteSettings,
+} from "@/lib/site.functions";
+
+const ADVANTAGES = [
+  {
+    icon: YearsIcon,
+    title: "13 Years of Experience",
+    body: "Insured & certified technicians with 13 years servicing Sub-Zero, Wolf & Viking appliances across NY & NJ.",
+  },
+  {
+    icon: DiagnosticsIcon,
+    title: "Accurate Diagnostics",
+    body: "We identify the real fault before quoting — no guesswork, no unnecessary parts.",
+  },
+  {
+    icon: PricingIcon,
+    title: "Transparent Pricing",
+    body: "Before any repair, we explain all costs clearly. $95 diagnostic fee, waived when we complete the repair.",
+  },
+  {
+    icon: SameDayIcon,
+    title: "Urgent Repairs",
+    body: "For Sub-Zero refrigerators, Viking ovens and Wolf cooktops, depending on technician schedule and parts.",
+  },
+];
+
+// Real Google reviews (client-provided, verbatim aside from minor brand-name
+// capitalization for consistency with the rest of the site).
+const HOME_REVIEWS: Testimonial[] = [
+  {
+    quote:
+      "Ben was incredibly helpful in my time of need. I had a high pitched noise coming from my Sub-Zero fridge and he was able to isolate the issue and get it resolved within the day. He was extremely professional and knowledgeable. He took the time to explain things and made sure everything was perfect as he wrapped up. Highly recommend.",
+    author: "Jessica Laurella",
+    meta: "8 reviews · 2 photos",
+    time: "a month ago",
+    service: "Refrigerator/freezer repair, stove, cooktop & oven repair",
+  },
+  {
+    quote:
+      "Fast, skilled and reasonably priced! Ben and his assistant repaired my 13-year-old Wolf range without requiring a bunch of new parts or up-charging me for every little thing. After having several bad experiences with other repair people and seeing the difference, I won't ever call anyone other than Ben.",
+    author: "Ayla Yavin",
+    meta: "5 reviews",
+    time: "4 months ago",
+    service: "Oven repair",
+  },
+  {
+    quote:
+      "Ben from Viking Sub-Zero is the best repair! He will contact you to let you know when he is coming. He is extremely knowledgeable, neat and polite. He is the best and we have used him for years.",
+    author: "Jill Miller",
+    meta: "6 reviews",
+    time: "a month ago",
+  },
+  {
+    quote:
+      "Ben was extremely knowledgeable and knew what to do right away for servicing our Sub-Zero refrigerator. He had the part ready to be replaced the same day. Highly recommend!",
+    author: "Saddia Patton",
+    meta: "Local Guide · 23 reviews · 15 photos",
+    time: "6 months ago",
+    service: "Refrigerator/freezer repair",
+  },
+];
+
+const FAQ_PREVIEW = [
+  { q: "Do you offer same-day service?", a: "Same-day service depends on technician availability that day." },
+  { q: "How much is the diagnostic fee?", a: "The diagnostic fee is $95 ($125 in Manhattan), waived when you complete the repair with us." },
+  { q: "Do you use OEM parts?", a: "We use OEM or manufacturer-approved parts whenever available." },
+];
+
+export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Best Sub-Zero & Viking Service | NY & NJ Appliance Repair" },
+      {
+        name: "description",
+        content:
+          "Premium repair for Sub-Zero, Viking, Wolf and other high-end kitchen appliances across Staten Island, Brooklyn, Queens, Long Island and New Jersey. Call today.",
+      },
+      { property: "og:title", content: "Best Sub-Zero & Viking Service" },
+      {
+        property: "og:description",
+        content: "Honest, expert repair of premium residential kitchen appliances across NY & NJ.",
+      },
+      { property: "og:url", content: "/" },
+      { property: "og:image", content: "https://bestsubzerovikingservices.com/images/hero.webp" },
+    ],
+    links: [{ rel: "canonical", href: "/" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "LocalBusiness",
+          name: "Best Sub-Zero & Viking Service",
+          telephone: "+1-888-702-8565",
+          email: "info@bestsubzerovikingservices.com",
+          image: "https://bestsubzerovikingservices.com/images/hero.webp",
+          priceRange: "$$",
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: "23 Joel Pl",
+            addressLocality: "Staten Island",
+            addressRegion: "NY",
+            postalCode: "10306",
+            addressCountry: "US",
+          },
+          areaServed: [
+            "Staten Island",
+            "Brooklyn",
+            "Queens",
+            "Long Island",
+            "Great Neck",
+            "Jersey City",
+            "Elizabeth NJ",
+            "North & Central New Jersey",
+          ],
+        }),
+      },
+    ],
+  }),
+  loader: ({ context }) =>
+    Promise.all([
+      context.queryClient.ensureQueryData({ queryKey: ["featured-services"], queryFn: () => listFeaturedServices() }),
+      context.queryClient.ensureQueryData({ queryKey: ["featured-projects"], queryFn: () => listFeaturedProjects() }),
+      context.queryClient.ensureQueryData({ queryKey: ["site-settings"], queryFn: () => getSiteSettings() }),
+    ]),
+  component: Home,
+});
+
+function Home() {
+  const { data: settings } = useQuery({ queryKey: ["site-settings"], queryFn: () => getSiteSettings() });
+  const { data: featured = [] } = useQuery({ queryKey: ["featured-services"], queryFn: () => listFeaturedServices() });
+  const { data: projects = [] } = useQuery({ queryKey: ["featured-projects"], queryFn: () => listFeaturedProjects() });
+
+  const phone = settings?.phone ?? "+1 (888) 702-8565";
+  const telHref = `tel:${phone.replace(/[^+\d]/g, "")}`;
+
+  return (
+    <div>
+      {/* HERO — full-bleed background image, no card behind the text. A left-side
+          dark scrim (independent of how bright/dark the underlying photo is)
+          plus a drop-shadow keeps white text reliably legible over any photo. */}
+      <section className="relative isolate flex min-h-[480px] items-center overflow-hidden border-b border-border md:min-h-[560px] lg:min-h-[640px]">
+        <ImagePlaceholder
+          fill
+          src="/images/hero.webp"
+          label="Hero — premium kitchen"
+          alt="Luxury kitchen with a built-in stainless steel refrigerator, professional range and blue accent lighting"
+          priority
+          className="-z-10"
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0 -z-10 bg-gradient-to-r from-black/75 via-black/45 to-transparent md:from-black/70 md:via-black/25 md:to-transparent"
+        />
+
+        <div className="relative mx-auto w-full max-w-7xl px-4 py-16 md:px-8 md:py-24">
+          <div className="flex max-w-3xl flex-col">
+            <span className="mx-auto inline-flex w-fit items-center whitespace-nowrap rounded-full border border-white/25 bg-black/40 px-4 py-2 text-[11px] font-semibold uppercase tracking-wider text-white backdrop-blur-sm sm:mx-0">
+              Sub-Zero · Viking · Wolf specialists
+            </span>
+            <h1 className="mt-4 max-w-2xl text-balance text-4xl font-semibold tracking-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.7)] md:text-5xl">
+              Premium kitchen appliance repair, done right the first time.
+            </h1>
+            <p className="mt-5 max-w-xl text-base text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)] md:text-lg">
+              13 years of accurate diagnostics, transparent pricing and long-lasting repairs
+              for high-end residential appliances across New York and New Jersey.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a href={telHref}>
+                <Button size="lg" className="gap-2 bg-white text-primary hover:bg-white/90">
+                  <Phone className="h-4 w-4" /> Call {phone}
+                </Button>
+              </a>
+              <Link to="/contact">
+                <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
+                  Request service
+                </Button>
+              </Link>
+            </div>
+            <p className="mt-4 text-sm text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)]">
+              $95 diagnostic fee — <span className="font-medium">waived when the repair is completed</span>.
+            </p>
+            <div className="mt-6 hidden sm:block">
+              <GuaranteeBadge variant="dark" className="w-fit" />
+            </div>
+          </div>
+
+          <AnniversaryBadge className="absolute bottom-4 right-4 md:bottom-8 md:right-8" />
+        </div>
+      </section>
+
+      {/* WHY CHOOSE US / ADVANTAGES — diagonal two-tone panel adapted from the
+          client reference, using real hero photography (clipped diagonally)
+          instead of a stock technician/appliance composite. */}
+      <section className="relative isolate overflow-hidden bg-background">
+        <div
+          aria-hidden
+          className="absolute inset-y-0 left-0 hidden w-[44%] overflow-hidden shadow-[12px_0_30px_-8px_rgba(0,0,0,0.3)] [clip-path:polygon(0_0,100%_0,82%_100%,0_100%)] lg:block"
+        >
+          <ImagePlaceholder fill src="/images/hero-why-choose-us.webp" label="Premium kitchen appliance" alt="" />
+        </div>
+
+        <div className="relative mx-auto max-w-7xl px-4 py-20 md:px-8 md:py-24">
+          <div className="max-w-md lg:ml-auto">
+            <h2 className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
+              Why <span className="text-accent">choose</span> us
+            </h2>
+            <p className="mt-4 text-lg text-muted-foreground">
+              When your Sub-Zero, Wolf or Viking needs service, our technicians diagnose the real issue, explain
+              your options clearly, and get it fixed right — the first time.
+            </p>
+
+            <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-10">
+              {ADVANTAGES.map((a) => (
+                <div key={a.title} className="flex flex-col items-start gap-3">
+                  <a.icon className="h-16 w-16 flex-shrink-0 text-accent" aria-hidden />
+                  <div>
+                    <p className="text-base font-semibold leading-tight text-foreground">{a.title}</p>
+                    <p className="mt-1 text-sm text-muted-foreground">{a.body}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FEATURED SERVICES */}
+      <section className="border-y border-border bg-muted/30">
+        <div className="mx-auto max-w-7xl px-4 py-20 md:px-8">
+          <div className="flex items-end justify-between gap-6">
+            <div className="max-w-2xl">
+              <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">Featured <span className="text-accent">services</span></h2>
+              <p className="mt-3 text-muted-foreground">
+                From Sub-Zero built-ins to Viking ranges, we service the appliances that anchor your kitchen.
+              </p>
+            </div>
+            <Link to="/services" className="hidden text-sm text-accent hover:underline md:inline-flex">
+              View all services →
+            </Link>
+          </div>
+          <div className="mt-10 grid gap-x-6 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
+            {featured.map((s) => {
+              const CategoryIcon = getServiceCategoryIcon(s.category);
+              return (
+                <Link
+                  key={s.id}
+                  to="/services/$slug"
+                  params={{ slug: s.slug }}
+                  className="group relative flex flex-col rounded-lg border border-border bg-card transition-shadow hover:shadow-md"
+                >
+                  <div className="relative">
+                    <ImagePlaceholder
+                      aspect="square"
+                      label={s.title}
+                      src={s.image_url}
+                      alt={`${s.title} — Sub-Zero & Viking appliance repair service`}
+                      className="rounded-b-none"
+                    />
+                    <div className="absolute -bottom-8 left-6 flex h-20 w-20 items-center justify-center rounded-lg border border-border bg-card shadow-sm">
+                      <CategoryIcon className={`${getServiceCategoryIconClassName(s.category)} text-foreground`} aria-hidden />
+                      <span aria-hidden className="absolute -bottom-1 h-0.5 w-8 rounded-full bg-accent" />
+                    </div>
+                  </div>
+                  <div className="flex flex-1 flex-col p-6 pb-8 pt-14">
+                    <h3 className="text-lg font-semibold">{s.title}</h3>
+                    <p className="mt-2 flex-1 text-sm text-muted-foreground">{s.short_description}</p>
+                  </div>
+                  <span className="absolute -bottom-5 left-6 inline-flex items-center justify-center rounded-md bg-accent px-5 py-2.5 font-display text-sm font-bold text-accent-foreground shadow-sm transition-colors group-hover:bg-accent/90">
+                    Request Service
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* PROJECTS — gallery: a muted looping video reel up top, then a
+          hover-reveal photo grid below (image zooms, title/brand slides up
+          over a dark gradient) instead of plain cards with text underneath. */}
+      {projects.length > 0 ? (
+        <section className="mx-auto max-w-7xl px-4 py-20 md:px-8">
+          <div className="flex items-end justify-between gap-6">
+            <div>
+              <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">Recent <span className="text-accent">projects</span></h2>
+              <p className="mt-3 text-muted-foreground">A sample of repairs completed for customers across NY &amp; NJ.</p>
+            </div>
+            <Link to="/projects" className="hidden text-sm text-accent hover:underline md:inline-flex">
+              All projects →
+            </Link>
+          </div>
+
+          <div className="relative mt-10 aspect-video overflow-hidden rounded-xl shadow-md">
+            <iframe
+              src="https://www.youtube.com/embed/t0z6O0nhGfY?autoplay=1&mute=1&loop=1&playlist=t0z6O0nhGfY&controls=0&modestbranding=1&playsinline=1&rel=0&showinfo=0&disablekb=1"
+              title="Best Sub-Zero & Viking Service — recent work"
+              allow="autoplay; encrypted-media"
+              frameBorder={0}
+              className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+            />
+          </div>
+
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            {projects.map((p) => (
+              <Link
+                key={p.id}
+                to="/projects"
+                hash={p.slug}
+                className="group relative block aspect-square overflow-hidden rounded-lg"
+              >
+                <ImagePlaceholder
+                  fill
+                  label={p.title}
+                  src={p.image_urls?.[0]}
+                  alt={`${p.title} — completed appliance repair project`}
+                  className="transition-transform duration-500 group-hover:scale-105"
+                />
+                <div
+                  aria-hidden
+                  className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-90 transition-opacity group-hover:opacity-100"
+                />
+                <div className="absolute inset-x-0 bottom-0 p-5">
+                  <span className="text-xs uppercase tracking-widest text-white/70">
+                    {p.brands.join(" · ")} · {p.service_area}
+                  </span>
+                  <h3 className="mt-1 text-base font-semibold text-white">{p.title}</h3>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      {/* TESTIMONIAL */}
+      <section className="relative isolate overflow-hidden border-y border-border text-primary-foreground">
+        <ImagePlaceholder fill src="/images/hero-review.webp" label="Customer reviews" alt="" className="-z-10" />
+        <div aria-hidden className="absolute inset-0 -z-10 bg-primary/85" />
+
+        <div className="mx-auto max-w-4xl px-4 py-20 text-center md:px-8">
+          <p className="text-xs uppercase tracking-[0.25em] text-primary-foreground/60">Customer feedback</p>
+          <TestimonialCarousel testimonials={HOME_REVIEWS} className="mt-6" />
+          <ReviewsBar variant="dark" className="mt-10 justify-center" />
+          <Link to="/reviews" className="mt-6 inline-flex text-sm text-accent-foreground underline underline-offset-4">
+            Read customer reviews →
+          </Link>
+        </div>
+      </section>
+
+      {/* SERVICE AREA */}
+      <section className="mx-auto max-w-7xl px-4 py-20 md:px-8">
+        <div className="grid gap-10 md:grid-cols-2">
+          <div>
+            <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">Serving NY &amp; NJ <span className="text-accent">homes</span></h2>
+            <p className="mt-3 max-w-xl text-muted-foreground">
+              We're based in the New York metro and cover Staten Island, Brooklyn, Queens, Long Island,
+              Great Neck, Jersey City, Elizabeth NJ and North &amp; Central New Jersey.
+            </p>
+            <ul className="mt-6 grid grid-cols-2 gap-2 text-sm">
+              {["Staten Island", "Brooklyn", "Queens", "Long Island", "Great Neck", "Jersey City", "Elizabeth, NJ", "North & Central NJ"].map(
+                (a) => (
+                  <li key={a} className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-accent" aria-hidden /> {a}
+                  </li>
+                ),
+              )}
+            </ul>
+            <Link to="/service-area" className="mt-6 inline-flex text-sm text-accent hover:underline">
+              See full service area →
+            </Link>
+          </div>
+          <div className="overflow-hidden rounded-lg border border-border">
+            <iframe
+              title="Map of completed appliance repair jobs across NY & NJ"
+              src="https://www.google.com/maps/d/embed?mid=1KRsUeTkfj5YfyxZIZ93085Ynm4D4Cz0&ll=40.63165163668629%2C-74.13427010000002&z=10"
+              width="100%"
+              height="100%"
+              className="aspect-video border-0"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ PREVIEW — same diagonal two-tone treatment as "Why choose us",
+          mirrored so the photo panel sits on the right. */}
+      <section className="relative isolate overflow-hidden border-t border-border bg-background">
+        <div
+          aria-hidden
+          className="absolute inset-y-0 right-0 hidden w-[44%] overflow-hidden shadow-[-12px_0_30px_-8px_rgba(0,0,0,0.3)] [clip-path:polygon(100%_0,0_0,18%_100%,100%_100%)] lg:block"
+        >
+          <ImagePlaceholder fill src="/images/hero-FAQ.webp" label="Premium kitchen appliance" alt="" />
+        </div>
+
+        <div className="relative mx-auto max-w-7xl px-4 py-20 md:px-8 md:py-24">
+          <div className="max-w-md lg:mr-auto">
+            <h2 className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
+              Common <span className="text-accent">questions</span>
+            </h2>
+            <div className="mt-8 divide-y divide-border overflow-hidden rounded-lg border border-border bg-card">
+              {FAQ_PREVIEW.map((f) => (
+                <div key={f.q} className="p-6">
+                  <h3 className="text-base font-semibold">{f.q}</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">{f.a}</p>
+                </div>
+              ))}
+            </div>
+            <Link to="/faq" className="mt-6 inline-flex text-sm text-accent hover:underline">
+              Read all FAQs →
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* FINAL CTA */}
+      <section className="mx-auto max-w-4xl px-4 py-24 md:px-8">
+        <div className="rounded-2xl border border-border bg-card p-8 text-center md:p-12">
+          <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">Ready to <span className="text-accent">book</span> a diagnostic?</h2>
+          <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
+            Book your appointment online, or call us directly for same-day help.
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <a href={telHref}>
+              <Button size="lg" className="gap-2">
+                <Phone className="h-4 w-4" /> Call {phone}
+              </Button>
+            </a>
+            <Link to="/contact">
+              <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
+                Book online
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}

@@ -1,0 +1,5 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { legacyRedirect } from "@/lib/legacy-redirect";
+
+// Legacy Wix URL — permanently redirects to the closest matching page.
+export const Route = createFileRoute("/viking-stove-repair")(legacyRedirect("/services/range-stove-repair"));
