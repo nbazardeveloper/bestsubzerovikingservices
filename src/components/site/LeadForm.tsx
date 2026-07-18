@@ -12,7 +12,7 @@ const AREAS = [
   "Staten Island",
   "Brooklyn",
   "Queens",
-  "Long Island",
+  "Long Island (near Queens)",
   "Great Neck",
   "Jersey City",
   "Elizabeth, NJ",

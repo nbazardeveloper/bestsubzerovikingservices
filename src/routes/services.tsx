@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ImagePlaceholder } from "@/components/site/ImagePlaceholder";
+import { SpecialistBrandsBand } from "@/components/site/SpecialistBrandsBand";
 import { listServices } from "@/lib/site.functions";
 import { getServiceIcon, getServiceCategoryIconClassName } from "@/lib/service-category-icons";
 
@@ -55,16 +56,19 @@ function ServicesPage() {
         <div className="mx-auto max-w-7xl px-4 py-16 md:px-8 md:py-20">
           <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">Services</h1>
           <p className="mt-4 max-w-2xl text-muted-foreground">
-            We repair premium residential kitchen appliances with a focus on Sub-Zero, Viking and
-            Wolf, and also service other high-end brands including Thermador, Bosch, Dacor, GE
-            Monogram and Bertazzoni.
+            We repair premium residential kitchen appliances. For ranges, stoves, cooktops and
+            ovens, we repair all brands — for refrigeration and other equipment, we also service
+            other high-end brands including Thermador, Bosch, Dacor, GE Monogram and Bertazzoni.
           </p>
           <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
             We do not service LG, Samsung or Liebherr refrigerators, and we do not repair
-            dishwashers, washing machines or dryers.
+            dishwashers, washing machines or dryers. We provide repair and maintenance only — we do
+            not perform new appliance installations.
           </p>
         </div>
       </section>
+
+      <SpecialistBrandsBand />
 
       <section className="mx-auto max-w-7xl px-4 py-10 md:px-8">
         <div className="flex flex-col gap-4">

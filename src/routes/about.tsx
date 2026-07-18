@@ -75,6 +75,10 @@ function About() {
               13 years of accurate diagnostics, transparent communication and quality workmanship —
               helping customers avoid unnecessary replacements.
             </p>
+            <p className="mt-4 max-w-xl text-sm text-muted-foreground">
+              We are an independent service company — not the manufacturer, an authorized dealer, or
+              a factory-affiliated service center for Sub-Zero, Viking or Wolf.
+            </p>
           </div>
           <ImagePlaceholder
             aspect="video"

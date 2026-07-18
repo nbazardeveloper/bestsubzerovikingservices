@@ -11,7 +11,7 @@ const AREAS = [
   "Staten Island",
   "Brooklyn",
   "Queens",
-  "Long Island",
+  "Long Island (near Queens)",
   "Great Neck",
   "Jersey City",
   "Elizabeth, NJ",
@@ -19,7 +19,6 @@ const AREAS = [
 ];
 
 const BOOKING_URL = "https://api.prosbuddy.com/widget/bookings/now-schedule-service";
-const BUSINESS_ADDRESS = "23 Joel Pl, Staten Island, NY 10306";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -28,7 +27,7 @@ export const Route = createFileRoute("/contact")({
       {
         name: "description",
         content:
-          "Call (888) 702-8565 or request service online for premium appliance repair across Staten Island, Brooklyn, Queens, Long Island and North and Central NJ.",
+          "Call (888) 702-8565 or request service online for premium appliance repair across Staten Island, Brooklyn, Queens, Long Island near Queens and North and Central NJ.",
       },
       { property: "og:title", content: "Contact Best Sub-Zero & Viking Service" },
       { property: "og:description", content: "Get in touch to schedule a diagnostic or repair." },
@@ -45,14 +44,6 @@ export const Route = createFileRoute("/contact")({
           telephone: "+1-888-702-8565",
           email: "info@bestsubzerovikingservices.com",
           priceRange: "$$",
-          address: {
-            "@type": "PostalAddress",
-            streetAddress: "23 Joel Pl",
-            addressLocality: "Staten Island",
-            addressRegion: "NY",
-            postalCode: "10306",
-            addressCountry: "US",
-          },
           areaServed: AREAS,
         }),
       },
@@ -70,9 +61,10 @@ function Contact() {
   const { data: s } = useQuery({ queryKey: ["site-settings"], queryFn: () => getSiteSettings() });
   const phone = s?.phone ?? "+1 (888) 702-8565";
   const digits = phone.replace(/[^+\d]/g, "");
-  // WhatsApp stays on the original mobile line — toll-free numbers like
+  // WhatsApp runs on a separate mobile line — toll-free numbers like
   // (888) 702-8565 generally can't run a WhatsApp Business account.
-  const waDigits = "13476170717";
+  const whatsappPhone = "+1 (347) 617-0717";
+  const whatsappDigits = "13476170717";
 
   return (
     <div>
@@ -156,7 +148,7 @@ function Contact() {
                 </Button>
               </a>
               <a
-                href={`https://wa.me/${waDigits}`}
+                href={`https://wa.me/${whatsappDigits}`}
                 target="_blank"
                 rel="noreferrer noopener"
                 className="min-w-0"
@@ -166,7 +158,7 @@ function Contact() {
                   variant="outline"
                   className="w-full min-w-0 justify-start gap-3 whitespace-normal text-left"
                 >
-                  <MessageCircle className="h-4 w-4 flex-shrink-0" /> WhatsApp {phone}
+                  <MessageCircle className="h-4 w-4 flex-shrink-0" /> WhatsApp {whatsappPhone}
                 </Button>
               </a>
               {s?.email ? (
@@ -181,15 +173,6 @@ function Contact() {
                   </Button>
                 </a>
               ) : null}
-              <a
-                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s?.address ?? BUSINESS_ADDRESS)}`}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="inline-flex items-start gap-3 rounded-md px-3 py-2 text-sm text-muted-foreground hover:text-foreground"
-              >
-                <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0 text-accent" aria-hidden />
-                {s?.address ?? BUSINESS_ADDRESS}
-              </a>
             </div>
           </div>
 

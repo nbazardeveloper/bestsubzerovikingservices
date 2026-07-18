@@ -30,7 +30,7 @@ const AREAS = [
   "Staten Island",
   "Brooklyn",
   "Queens",
-  "Long Island",
+  "Long Island (near Queens)",
   "Great Neck",
   "Jersey City",
   "Elizabeth, NJ",
@@ -275,6 +275,17 @@ export function SiteFooter() {
         <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-2 px-4 py-5 text-xs text-muted-foreground md:flex-row md:items-center md:px-8">
           <span>© {year} Best Sub-Zero &amp; Viking Service. All rights reserved.</span>
           <span>Residential appliance repair only.</span>
+        </div>
+      </div>
+
+      {/* Trademark/affiliation disclaimer — required since we service these
+          brands but have no corporate affiliation with them. */}
+      <div className="border-t border-border bg-muted/30">
+        <div className="mx-auto max-w-7xl px-4 py-3 text-[11px] leading-relaxed text-muted-foreground md:px-8">
+          Best Sub-Zero &amp; Viking Service is an independent service company. We specialize in the
+          repair and maintenance of Sub-Zero, Viking and Wolf appliances, but we are not the
+          manufacturer, an authorized dealer, or a factory-affiliated service center for these
+          brands. All brand names, trademarks and logos are the property of their respective owners.
         </div>
       </div>
 

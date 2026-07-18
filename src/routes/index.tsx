@@ -7,6 +7,7 @@ import { ImagePlaceholder } from "@/components/site/ImagePlaceholder";
 import { GuaranteeBadge } from "@/components/site/GuaranteeBadge";
 import { AnniversaryBadge } from "@/components/site/AnniversaryBadge";
 import { ReviewsBar } from "@/components/site/ReviewsBar";
+import { SpecialistBrandsBand } from "@/components/site/SpecialistBrandsBand";
 import { TestimonialCarousel } from "@/components/site/TestimonialCarousel";
 import { LazyYouTubeBackground } from "@/components/site/LazyYouTubeBackground";
 import { SITE_REVIEWS } from "@/lib/reviews-data";
@@ -76,7 +77,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Premium repair for Sub-Zero, Viking, Wolf and other high-end kitchen appliances across Staten Island, Brooklyn, Queens, Long Island and New Jersey. Call today.",
+          "Premium repair for Sub-Zero, Viking, Wolf and other high-end kitchen appliances across Staten Island, Brooklyn, Queens, Long Island near Queens and New Jersey. Call today.",
       },
       { property: "og:title", content: "Best Sub-Zero & Viking Service" },
       {
@@ -98,19 +99,11 @@ export const Route = createFileRoute("/")({
           email: "info@bestsubzerovikingservices.com",
           image: "https://bestsubzerovikingservices.com/images/hero.webp",
           priceRange: "$$",
-          address: {
-            "@type": "PostalAddress",
-            streetAddress: "23 Joel Pl",
-            addressLocality: "Staten Island",
-            addressRegion: "NY",
-            postalCode: "10306",
-            addressCountry: "US",
-          },
           areaServed: [
             "Staten Island",
             "Brooklyn",
             "Queens",
-            "Long Island",
+            "Long Island (near Queens)",
             "Great Neck",
             "Jersey City",
             "Elizabeth NJ",
@@ -211,6 +204,8 @@ function Home() {
           <AnniversaryBadge className="absolute bottom-4 right-4 hidden md:flex md:bottom-8 md:right-8" />
         </div>
       </section>
+
+      <SpecialistBrandsBand />
 
       {/* WHY CHOOSE US / ADVANTAGES — diagonal two-tone panel adapted from the
           client reference, using real hero photography (clipped diagonally)
@@ -418,14 +413,15 @@ function Home() {
             </h2>
             <p className="mt-3 max-w-xl text-muted-foreground">
               We're based in the New York metro and cover Staten Island, Brooklyn, Queens, Long
-              Island, Great Neck, Jersey City, Elizabeth NJ and North &amp; Central New Jersey.
+              Island near Queens, Great Neck, Jersey City, Elizabeth NJ and North &amp; Central New
+              Jersey.
             </p>
             <ul className="mt-6 grid grid-cols-2 gap-2 text-sm">
               {[
                 "Staten Island",
                 "Brooklyn",
                 "Queens",
-                "Long Island",
+                "Long Island (near Queens)",
                 "Great Neck",
                 "Jersey City",
                 "Elizabeth, NJ",

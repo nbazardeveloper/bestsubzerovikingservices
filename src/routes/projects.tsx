@@ -18,7 +18,7 @@ export const Route = createFileRoute("/projects")({
       {
         name: "description",
         content:
-          "A sample of premium appliance repair projects completed for customers across Staten Island, Brooklyn, Long Island and New Jersey by our repair specialists.",
+          "A sample of premium appliance repair projects completed for customers across Staten Island, Brooklyn, Long Island near Queens and New Jersey by our repair specialists.",
       },
       { property: "og:title", content: "Recent Repair Projects" },
       {

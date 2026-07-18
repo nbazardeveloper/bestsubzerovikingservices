@@ -26,15 +26,23 @@ const FAQ = [
   },
   {
     q: "Which brands do you service?",
-    a: "We specialize in Sub-Zero, Viking and Wolf, and we also service other premium residential brands including Thermador, Bosch, Dacor, GE Monogram and Bertazzoni.",
+    a: "We specialize in Sub-Zero, Viking and Wolf. For ranges, stoves, cooktops and ovens, we repair all brands — for refrigeration and other equipment, we also service other premium residential brands including Thermador, Bosch, Dacor, GE Monogram and Bertazzoni.",
   },
   {
     q: "Which appliances or brands do you NOT service?",
     a: "We do not service LG, Samsung or Liebherr refrigerators, and we do not repair dishwashers, washing machines or dryers. Our focus is premium residential kitchen appliances and high-end refrigeration.",
   },
   {
+    q: "Do you install new appliances?",
+    a: "No. We specialize in repair and maintenance only — we do not perform new appliance installations.",
+  },
+  {
+    q: "Are you an authorized Sub-Zero, Viking or Wolf dealer?",
+    a: "No. We are an independent service company specializing in the repair and maintenance of Sub-Zero, Viking and Wolf appliances. We are not the manufacturer, an authorized dealer, or a factory-affiliated service center for these brands.",
+  },
+  {
     q: "Where do you provide service?",
-    a: "We serve Staten Island, Brooklyn, Queens, Long Island, Great Neck, Jersey City, Elizabeth, and North & Central New Jersey.",
+    a: "We serve Staten Island, Brooklyn, Queens, Long Island near Queens (Great Neck and nearby Nassau towns), Jersey City, Elizabeth, and North & Central New Jersey.",
   },
   {
     q: "Do you service commercial appliances?",

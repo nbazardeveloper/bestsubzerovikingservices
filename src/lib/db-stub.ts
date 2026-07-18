@@ -20,7 +20,7 @@ export const mockSiteSettings: SiteSettings = {
   business_name: "Best Sub-Zero & Viking Service",
   phone: "+1 (888) 702-8565",
   email: "info@bestsubzerovikingservices.com",
-  address: "23 Joel Pl, Staten Island, NY 10306",
+  address: null,
   hours: "Mon–Sat: 8:00 AM – 7:00 PM",
   diagnostic_fee: "$95, waived when the repair is completed ($125 in Manhattan, also waived)",
   social_links: {
@@ -88,11 +88,21 @@ export const mockServices: MockService[] = [
     id: "svc-3",
     slug: "ice-maker-repair",
     title: "Ice Maker Repair",
-    brands: ["Sub-Zero", "Viking", "Wolf"],
+    brands: [
+      "Sub-Zero",
+      "Scotsman",
+      "Hoshizaki",
+      "U-Line",
+      "Marvel",
+      "KitchenAid",
+      "GE Monogram",
+      "Viking",
+      "Manitowoc",
+    ],
     category: "Refrigeration",
-    short_description: "Repair for built-in and clear-ice ice makers.",
+    short_description: "Repair for built-in and clear-ice ice makers, all major brands.",
     description:
-      "From dedicated built-in ice makers to in-refrigerator ice systems, we diagnose water inlet valves, ice mold heaters, augers, control modules and clear-ice production issues.",
+      "From dedicated built-in ice makers to in-refrigerator ice systems, we service Sub-Zero, Scotsman, Hoshizaki, U-Line, Marvel, KitchenAid, GE Monogram, Viking, Manitowoc and other major brands — diagnosing water inlet valves, ice mold heaters, augers, control modules and clear-ice production issues.",
     image_url: "/images/services/IceMaker.webp",
     is_published: true,
     is_featured: false,
@@ -105,9 +115,10 @@ export const mockServices: MockService[] = [
     title: "Range & Stove Repair",
     brands: ["Viking", "Wolf", "Thermador", "Bertazzoni", "Dacor"],
     category: "Cooking",
-    short_description: "Gas and electric range and stove repair for premium brands.",
+    short_description:
+      "Gas and electric range and stove repair — all brands, specializing in Viking, Wolf & Sub-Zero.",
     description:
-      "We repair gas and dual-fuel ranges, sealed burners, ignition modules, safety valves, oven igniters, electric elements and control boards on Viking, Wolf, Thermador, Bertazzoni and Dacor equipment.",
+      "We repair gas and dual-fuel ranges and stoves across all brands, with specialized expertise in Viking, Wolf and Sub-Zero. Work includes sealed burners, ignition modules, safety valves, oven igniters, electric elements and control boards.",
     image_url: "/images/services/Cooking.webp",
     is_published: true,
     is_featured: true,
@@ -120,9 +131,10 @@ export const mockServices: MockService[] = [
     title: "Oven Repair",
     brands: ["Wolf", "Viking", "Thermador", "Bosch"],
     category: "Cooking",
-    short_description: "Wall oven and range oven diagnostics and repair.",
+    short_description:
+      "Wall oven and range oven diagnostics and repair — all brands, specializing in Wolf, Viking & Sub-Zero.",
     description:
-      "Wall ovens, double ovens, convection and steam ovens — we address heating faults, thermostat calibration, door hinges, glass replacement, control boards and fan systems.",
+      "Wall ovens, double ovens, convection and steam ovens — we repair all brands, with specialized expertise in Wolf, Viking and Sub-Zero. We address heating faults, thermostat calibration, door hinges, glass replacement, control boards and fan systems.",
     image_url: "/images/services/Oven.webp",
     is_published: true,
     is_featured: false,
@@ -135,9 +147,10 @@ export const mockServices: MockService[] = [
     title: "Cooktop Repair",
     brands: ["Wolf", "Viking", "Thermador", "Bosch"],
     category: "Cooking",
-    short_description: "Gas, induction and electric cooktop repair.",
+    short_description:
+      "Gas, induction and electric cooktop repair — all brands, specializing in Wolf, Viking & Sub-Zero.",
     description:
-      "Cooktop repair for gas, induction and radiant electric surfaces. We handle burner ignition, sealed-burner cleaning and rebuild, induction coil replacement, glass-top replacement and touch controls.",
+      "Cooktop repair for gas, induction and radiant electric surfaces, across all brands, with specialized expertise in Wolf, Viking and Sub-Zero. We handle burner ignition, sealed-burner cleaning and rebuild, induction coil replacement, glass-top replacement and touch controls.",
     image_url: "/images/services/Cooktop.webp",
     is_published: true,
     is_featured: false,

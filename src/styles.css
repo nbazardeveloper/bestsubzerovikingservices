@@ -47,13 +47,17 @@
 
 /* 2. Theme tokens -----------------------------------------------------------
  * Font pairing: Montserrat (headings, nav/menu, buttons and other accents) +
- * Open Sans (body copy/descriptions). Palette: white / near-black /
- * stainless-steel gray, with a subtle blue accent used sparingly for links
- * and primary CTAs.
+ * Open Sans (body copy/descriptions). Palette: white / royal navy blue /
+ * stainless-steel gray, with a brighter blue accent used sparingly for links
+ * and highlight elements.
  */
 @theme inline {
-  --font-sans: "Open Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-display: "Montserrat", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-sans:
+    "Open Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  --font-display:
+    "Montserrat", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -129,18 +133,20 @@
 :root {
   --radius: 0.5rem;
 
-  /* Base neutrals — body text is #222222 (dark gray/near-black) for strong
-     contrast on the light background, per brand spec. */
+  /* Base neutrals — body text is the same deep navy as --primary (was
+     #222222 near-black gray; client asked for text to match the new navy). */
   --background: oklch(1 0 0);
-  --foreground: #222222;
+  --foreground: oklch(0.21 0.05 258.7);
 
   --card: oklch(1 0 0);
-  --card-foreground: #222222;
+  --card-foreground: oklch(0.21 0.05 258.7);
   --popover: oklch(1 0 0);
-  --popover-foreground: #222222;
+  --popover-foreground: oklch(0.21 0.05 258.7);
 
-  /* Primary = deep charcoal (near-black) for CTAs */
-  --primary: oklch(0.18 0.01 250);
+  /* Primary = deep navy blue for CTAs (was a near-black charcoal — client
+     asked for navy instead of black, then asked for something darker and
+     less saturated/"bright" than the first navy pass). */
+  --primary: oklch(0.21 0.05 258.7);
   --primary-foreground: oklch(0.98 0 0);
 
   /* Secondary/muted = stainless-steel gray */
@@ -166,7 +172,7 @@
 
   --sidebar: oklch(0.98 0.003 250);
   --sidebar-foreground: oklch(0.16 0.01 250);
-  --sidebar-primary: oklch(0.18 0.01 250);
+  --sidebar-primary: oklch(0.21 0.05 258.7);
   --sidebar-primary-foreground: oklch(0.98 0 0);
   --sidebar-accent: oklch(0.94 0.005 250);
   --sidebar-accent-foreground: oklch(0.18 0.01 250);
@@ -223,12 +229,18 @@
     font-family: var(--font-sans);
   }
 
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     letter-spacing: -0.02em;
   }
 
   /* Montserrat (headings, nav/menu, accents) + Open Sans (body copy). */
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     font-family: var(--font-display);
     font-weight: 600;
     letter-spacing: -0.01em;

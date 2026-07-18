@@ -13,7 +13,7 @@ export const Route = createFileRoute("/projects_/gallery")({
       {
         name: "description",
         content:
-          "Photos from appliance repair projects completed across Staten Island, Brooklyn, Long Island and New Jersey.",
+          "Photos from appliance repair projects completed across Staten Island, Brooklyn, Long Island near Queens and New Jersey.",
       },
     ],
     links: [{ rel: "canonical", href: absUrl("/projects/gallery") }],

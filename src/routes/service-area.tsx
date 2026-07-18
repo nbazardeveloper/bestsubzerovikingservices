@@ -19,8 +19,9 @@ const AREAS = [
       "Coverage across Queens for premium refrigeration, ranges and ovens in single-family and multi-family homes.",
   },
   {
-    name: "Long Island",
-    blurb: "Nassau and western Suffolk coverage for Sub-Zero, Viking and Wolf installations.",
+    name: "Long Island (near Queens)",
+    blurb:
+      "Long Island is long, so our coverage is limited to the Nassau County communities closest to the Queens border — Great Neck, Manhasset, New Hyde Park and Floral Park. We don't currently reach central or eastern Nassau, or Suffolk County.",
   },
   {
     name: "Great Neck",
@@ -48,7 +49,7 @@ export const Route = createFileRoute("/service-area")({
       {
         name: "description",
         content:
-          "We repair premium kitchen appliances in Staten Island, Brooklyn, Queens, Long Island, Great Neck, Jersey City, Elizabeth NJ, and North and Central New Jersey.",
+          "We repair premium kitchen appliances in Staten Island, Brooklyn, Queens, Long Island near Queens (Great Neck and nearby Nassau towns), Jersey City, Elizabeth NJ, and North and Central New Jersey.",
       },
       { property: "og:title", content: "Service Area" },
       { property: "og:description", content: "Where we repair premium kitchen appliances." },
