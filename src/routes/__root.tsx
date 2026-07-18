@@ -8,14 +8,22 @@ import {
   Scripts,
   useMatches,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
-import { Toaster } from "sonner";
+import { lazy, Suspense, useEffect, type ReactNode } from "react";
+import { CalendarClock } from "lucide-react";
 
 import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
+import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { getSiteSettings } from "@/lib/site.functions";
+import { cn } from "@/lib/utils";
+
+// Toasts (sonner) are only ever triggered by form submissions (lead form,
+// admin, auth) — never needed for the initial render of any page. Loading
+// it lazily keeps its code out of the shared vendor chunk that every route
+// (including the homepage) would otherwise pay to parse/execute upfront.
+const Toaster = lazy(() => import("sonner").then((m) => ({ default: m.Toaster })));
 
 function NotFoundComponent() {
   return (
@@ -42,14 +50,13 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
-  useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
-  }, [error]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">This page didn't load</h1>
+        <h1 className="text-xl font-semibold tracking-tight text-foreground">
+          This page didn't load
+        </h1>
         <p className="mt-2 text-sm text-muted-foreground">
           Something went wrong on our end. You can try refreshing or head back home.
         </p>
@@ -139,6 +146,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
     ],
   }),
+  // SiteHeader and SiteFooter (rendered on every route below) both read the
+  // "site-settings" query for phone/social links. Without prefetching it
+  // here, pages that don't already load it themselves (only index/contact
+  // did) would render header/footer with no data during SSR and then patch
+  // in real data on the client — a server/client HTML mismatch that made
+  // React discard and re-render the page on hydration (visible as a flash/
+  // layout jump right at the top of the page, between header and hero).
+  loader: ({ context }) =>
+    context.queryClient.ensureQueryData({
+      queryKey: ["site-settings"],
+      queryFn: () => getSiteSettings(),
+    }),
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
@@ -163,7 +182,9 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
   const matches = useMatches();
-  const hideChrome = matches.some((m) => m.pathname.startsWith("/admin") || m.pathname.startsWith("/auth"));
+  const hideChrome = matches.some(
+    (m) => m.pathname.startsWith("/admin") || m.pathname.startsWith("/auth"),
+  );
 
   useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange((event) => {
@@ -176,14 +197,28 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="flex min-h-screen flex-col">
+      <div className={cn("flex min-h-screen flex-col", !hideChrome && "pb-20 md:pb-0")}>
         {!hideChrome && <SiteHeader />}
         <main className="flex-1">
           <Outlet />
         </main>
         {!hideChrome && <SiteFooter />}
       </div>
-      <Toaster position="top-right" richColors closeButton />
+      {!hideChrome && (
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background p-3 shadow-[0_-4px_16px_rgba(0,0,0,0.1)] md:hidden">
+          <Link to="/contact">
+            <Button
+              size="lg"
+              className="w-full gap-2 bg-accent text-accent-foreground hover:bg-accent/90"
+            >
+              <CalendarClock className="h-4 w-4" /> Request Service
+            </Button>
+          </Link>
+        </div>
+      )}
+      <Suspense fallback={null}>
+        <Toaster position="top-right" richColors closeButton />
+      </Suspense>
     </QueryClientProvider>
   );
 }

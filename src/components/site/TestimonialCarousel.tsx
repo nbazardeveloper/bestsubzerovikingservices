@@ -65,7 +65,8 @@ export function TestimonialCarousel({ testimonials, className }: Props) {
                 &ldquo;{t.quote}&rdquo;
               </blockquote>
               <footer className="mt-6 text-sm text-primary-foreground/70">
-                <span className="font-semibold text-primary-foreground">{t.author}</span> · {t.meta} · {t.time}
+                <span className="font-semibold text-primary-foreground">{t.author}</span> · {t.meta}{" "}
+                · {t.time}
                 {t.service ? (
                   <span className="mt-1 block text-xs uppercase tracking-widest text-primary-foreground/50">
                     {t.service}
@@ -86,18 +87,27 @@ export function TestimonialCarousel({ testimonials, className }: Props) {
         >
           <ChevronLeft className="h-4 w-4" />
         </button>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center">
           {testimonials.map((_, i) => (
+            // Button hit area is 24x24 (WCAG 2.5.8 minimum) even though the
+            // visible dot stays small — the dot is a centered inner span so
+            // the enlarged tap target doesn't change the carousel's look.
             <button
               key={i}
               type="button"
               onClick={() => scrollTo(i)}
               aria-label={`Go to review ${i + 1}`}
-              className={cn(
-                "h-2 w-2 rounded-full transition-colors",
-                i === selectedIndex ? "bg-accent" : "bg-primary-foreground/25 hover:bg-primary-foreground/40",
-              )}
-            />
+              className="flex h-6 w-6 items-center justify-center"
+            >
+              <span
+                className={cn(
+                  "h-2 w-2 rounded-full transition-colors",
+                  i === selectedIndex
+                    ? "bg-accent"
+                    : "bg-primary-foreground/25 hover:bg-primary-foreground/40",
+                )}
+              />
+            </button>
           ))}
         </div>
         <button

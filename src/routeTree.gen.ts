@@ -33,8 +33,10 @@ import { Route as ApplianceRepairStatenIslandRouteImport } from './routes/applia
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ServicesSlugRouteImport } from './routes/services.$slug'
+import { Route as ServicesSlugRouteImport } from './routes/services_.$slug'
+import { Route as ProjectsGalleryRouteImport } from './routes/projects_.gallery'
 import { Route as PostSlugRouteImport } from './routes/post.$slug'
+import { Route as ApiSoroWebhookRouteImport } from './routes/api.soro-webhook'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
@@ -164,13 +166,23 @@ const IndexRoute = IndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const ServicesSlugRoute = ServicesSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => ServicesRoute,
+  id: '/services_/$slug',
+  path: '/services/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProjectsGalleryRoute = ProjectsGalleryRouteImport.update({
+  id: '/projects_/gallery',
+  path: '/projects/gallery',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const PostSlugRoute = PostSlugRouteImport.update({
   id: '/post/$slug',
   path: '/post/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSoroWebhookRoute = ApiSoroWebhookRouteImport.update({
+  id: '/api/soro-webhook',
+  path: '/api/soro-webhook',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
@@ -214,7 +226,7 @@ export interface FileRoutesByFullPath {
   '/projects': typeof ProjectsRoute
   '/reviews': typeof ReviewsRoute
   '/service-area': typeof ServiceAreaRoute
-  '/services': typeof ServicesRouteWithChildren
+  '/services': typeof ServicesRoute
   '/services-8': typeof Services8Route
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/stove-repair': typeof StoveRepairRoute
@@ -227,7 +239,9 @@ export interface FileRoutesByFullPath {
   '/viking-stove-repair': typeof VikingStoveRepairRoute
   '/wolf-appliance-repair': typeof WolfApplianceRepairRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/api/soro-webhook': typeof ApiSoroWebhookRoute
   '/post/$slug': typeof PostSlugRoute
+  '/projects/gallery': typeof ProjectsGalleryRoute
   '/services/$slug': typeof ServicesSlugRoute
   '/admin/projects': typeof AuthenticatedAdminProjectsRoute
   '/admin/services': typeof AuthenticatedAdminServicesRoute
@@ -246,7 +260,7 @@ export interface FileRoutesByTo {
   '/projects': typeof ProjectsRoute
   '/reviews': typeof ReviewsRoute
   '/service-area': typeof ServiceAreaRoute
-  '/services': typeof ServicesRouteWithChildren
+  '/services': typeof ServicesRoute
   '/services-8': typeof Services8Route
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/stove-repair': typeof StoveRepairRoute
@@ -258,7 +272,9 @@ export interface FileRoutesByTo {
   '/viking-appliance-repair': typeof VikingApplianceRepairRoute
   '/viking-stove-repair': typeof VikingStoveRepairRoute
   '/wolf-appliance-repair': typeof WolfApplianceRepairRoute
+  '/api/soro-webhook': typeof ApiSoroWebhookRoute
   '/post/$slug': typeof PostSlugRoute
+  '/projects/gallery': typeof ProjectsGalleryRoute
   '/services/$slug': typeof ServicesSlugRoute
   '/admin/projects': typeof AuthenticatedAdminProjectsRoute
   '/admin/services': typeof AuthenticatedAdminServicesRoute
@@ -279,7 +295,7 @@ export interface FileRoutesById {
   '/projects': typeof ProjectsRoute
   '/reviews': typeof ReviewsRoute
   '/service-area': typeof ServiceAreaRoute
-  '/services': typeof ServicesRouteWithChildren
+  '/services': typeof ServicesRoute
   '/services-8': typeof Services8Route
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/stove-repair': typeof StoveRepairRoute
@@ -292,8 +308,10 @@ export interface FileRoutesById {
   '/viking-stove-repair': typeof VikingStoveRepairRoute
   '/wolf-appliance-repair': typeof WolfApplianceRepairRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/api/soro-webhook': typeof ApiSoroWebhookRoute
   '/post/$slug': typeof PostSlugRoute
-  '/services/$slug': typeof ServicesSlugRoute
+  '/projects_/gallery': typeof ProjectsGalleryRoute
+  '/services_/$slug': typeof ServicesSlugRoute
   '/_authenticated/admin/projects': typeof AuthenticatedAdminProjectsRoute
   '/_authenticated/admin/services': typeof AuthenticatedAdminServicesRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
@@ -326,7 +344,9 @@ export interface FileRouteTypes {
     | '/viking-stove-repair'
     | '/wolf-appliance-repair'
     | '/admin'
+    | '/api/soro-webhook'
     | '/post/$slug'
+    | '/projects/gallery'
     | '/services/$slug'
     | '/admin/projects'
     | '/admin/services'
@@ -357,7 +377,9 @@ export interface FileRouteTypes {
     | '/viking-appliance-repair'
     | '/viking-stove-repair'
     | '/wolf-appliance-repair'
+    | '/api/soro-webhook'
     | '/post/$slug'
+    | '/projects/gallery'
     | '/services/$slug'
     | '/admin/projects'
     | '/admin/services'
@@ -390,8 +412,10 @@ export interface FileRouteTypes {
     | '/viking-stove-repair'
     | '/wolf-appliance-repair'
     | '/_authenticated/admin'
+    | '/api/soro-webhook'
     | '/post/$slug'
-    | '/services/$slug'
+    | '/projects_/gallery'
+    | '/services_/$slug'
     | '/_authenticated/admin/projects'
     | '/_authenticated/admin/services'
     | '/_authenticated/admin/settings'
@@ -411,7 +435,7 @@ export interface RootRouteChildren {
   ProjectsRoute: typeof ProjectsRoute
   ReviewsRoute: typeof ReviewsRoute
   ServiceAreaRoute: typeof ServiceAreaRoute
-  ServicesRoute: typeof ServicesRouteWithChildren
+  ServicesRoute: typeof ServicesRoute
   Services8Route: typeof Services8Route
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StoveRepairRoute: typeof StoveRepairRoute
@@ -423,7 +447,10 @@ export interface RootRouteChildren {
   VikingApplianceRepairRoute: typeof VikingApplianceRepairRoute
   VikingStoveRepairRoute: typeof VikingStoveRepairRoute
   WolfApplianceRepairRoute: typeof WolfApplianceRepairRoute
+  ApiSoroWebhookRoute: typeof ApiSoroWebhookRoute
   PostSlugRoute: typeof PostSlugRoute
+  ProjectsGalleryRoute: typeof ProjectsGalleryRoute
+  ServicesSlugRoute: typeof ServicesSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -596,18 +623,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/services/$slug': {
-      id: '/services/$slug'
-      path: '/$slug'
+    '/services_/$slug': {
+      id: '/services_/$slug'
+      path: '/services/$slug'
       fullPath: '/services/$slug'
       preLoaderRoute: typeof ServicesSlugRouteImport
-      parentRoute: typeof ServicesRoute
+      parentRoute: typeof rootRouteImport
+    }
+    '/projects_/gallery': {
+      id: '/projects_/gallery'
+      path: '/projects/gallery'
+      fullPath: '/projects/gallery'
+      preLoaderRoute: typeof ProjectsGalleryRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/post/$slug': {
       id: '/post/$slug'
       path: '/post/$slug'
       fullPath: '/post/$slug'
       preLoaderRoute: typeof PostSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/soro-webhook': {
+      id: '/api/soro-webhook'
+      path: '/api/soro-webhook'
+      fullPath: '/api/soro-webhook'
+      preLoaderRoute: typeof ApiSoroWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin': {
@@ -676,18 +717,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
-interface ServicesRouteChildren {
-  ServicesSlugRoute: typeof ServicesSlugRoute
-}
-
-const ServicesRouteChildren: ServicesRouteChildren = {
-  ServicesSlugRoute: ServicesSlugRoute,
-}
-
-const ServicesRouteWithChildren = ServicesRoute._addFileChildren(
-  ServicesRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
@@ -701,7 +730,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProjectsRoute: ProjectsRoute,
   ReviewsRoute: ReviewsRoute,
   ServiceAreaRoute: ServiceAreaRoute,
-  ServicesRoute: ServicesRouteWithChildren,
+  ServicesRoute: ServicesRoute,
   Services8Route: Services8Route,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   StoveRepairRoute: StoveRepairRoute,
@@ -713,7 +742,10 @@ const rootRouteChildren: RootRouteChildren = {
   VikingApplianceRepairRoute: VikingApplianceRepairRoute,
   VikingStoveRepairRoute: VikingStoveRepairRoute,
   WolfApplianceRepairRoute: WolfApplianceRepairRoute,
+  ApiSoroWebhookRoute: ApiSoroWebhookRoute,
   PostSlugRoute: PostSlugRoute,
+  ProjectsGalleryRoute: ProjectsGalleryRoute,
+  ServicesSlugRoute: ServicesSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

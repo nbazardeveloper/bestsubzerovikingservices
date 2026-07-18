@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { absUrl } from "@/lib/seo";
 import { useQuery } from "@tanstack/react-query";
 import { Phone, Mail, MessageCircle, MapPin, CalendarClock } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,7 +8,14 @@ import { ReviewsBar } from "@/components/site/ReviewsBar";
 import { getSiteSettings } from "@/lib/site.functions";
 
 const AREAS = [
-  "Staten Island", "Brooklyn", "Queens", "Long Island", "Great Neck", "Jersey City", "Elizabeth, NJ", "North & Central NJ",
+  "Staten Island",
+  "Brooklyn",
+  "Queens",
+  "Long Island",
+  "Great Neck",
+  "Jersey City",
+  "Elizabeth, NJ",
+  "North & Central NJ",
 ];
 
 const BOOKING_URL = "https://api.prosbuddy.com/widget/bookings/now-schedule-service";
@@ -24,9 +32,9 @@ export const Route = createFileRoute("/contact")({
       },
       { property: "og:title", content: "Contact Best Sub-Zero & Viking Service" },
       { property: "og:description", content: "Get in touch to schedule a diagnostic or repair." },
-      { property: "og:url", content: "/contact" },
+      { property: "og:url", content: absUrl("/contact") },
     ],
-    links: [{ rel: "canonical", href: "/contact" }],
+    links: [{ rel: "canonical", href: absUrl("/contact") }],
     scripts: [
       {
         type: "application/ld+json",
@@ -51,7 +59,10 @@ export const Route = createFileRoute("/contact")({
     ],
   }),
   loader: ({ context }) =>
-    context.queryClient.ensureQueryData({ queryKey: ["site-settings"], queryFn: () => getSiteSettings() }),
+    context.queryClient.ensureQueryData({
+      queryKey: ["site-settings"],
+      queryFn: () => getSiteSettings(),
+    }),
   component: Contact,
 });
 
@@ -67,33 +78,106 @@ function Contact() {
     <div>
       <section className="border-b border-border">
         <div className="mx-auto max-w-7xl px-4 py-16 md:px-8 md:py-20">
-          <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">Contact <span className="text-accent">us</span></h1>
+          <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">
+            Contact <span className="text-accent">us</span>
+          </h1>
           <p className="mt-4 max-w-2xl text-muted-foreground">
-            Call, message on WhatsApp, or book online below. Please have your appliance's model number,
-            serial number and a brief problem description ready.
+            Call, message on WhatsApp, or book online below. Please have your appliance's model
+            number, serial number and a brief problem description ready.
           </p>
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-7xl gap-12 px-4 py-16 md:grid-cols-[2fr_3fr] md:px-8">
-        <div className="space-y-8">
-          <div>
-            <h2 className="text-xs uppercase tracking-[0.2em] text-accent">Direct contact</h2>
-            <div className="mt-4 grid gap-4">
-              <a href={`tel:${digits}`}>
-                <Button size="lg" className="w-full justify-start gap-3">
-                  <Phone className="h-4 w-4" /> Call {phone}
+      <section className="mx-auto grid max-w-7xl gap-12 px-4 py-16 md:grid-cols-[3fr_2fr] md:px-8">
+        <div>
+          <div className="rounded-2xl border border-border bg-card p-6 md:p-8">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <h2 className="text-2xl font-semibold tracking-tight">Book your service</h2>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Pick a time that works for you — our online scheduler books your diagnostic
+                  appointment directly.
+                </p>
+              </div>
+              <a
+                href={BOOKING_URL}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="hidden sm:inline-flex"
+              >
+                <Button variant="outline" className="gap-2">
+                  <CalendarClock className="h-4 w-4" /> Open scheduler
                 </Button>
               </a>
-              <a href={`https://wa.me/${waDigits}`} target="_blank" rel="noreferrer noopener">
-                <Button size="lg" variant="outline" className="w-full justify-start gap-3">
-                  <MessageCircle className="h-4 w-4" /> WhatsApp {phone}
+            </div>
+            <div className="mt-6 overflow-hidden rounded-lg border border-border">
+              <iframe
+                title="Book a service appointment online"
+                src={BOOKING_URL}
+                width="100%"
+                height="720"
+                className="border-0"
+                loading="lazy"
+              />
+            </div>
+            <a
+              href={BOOKING_URL}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="mt-3 inline-flex text-sm text-accent hover:underline sm:hidden"
+            >
+              Open the scheduler in a new tab →
+            </a>
+            <p className="mt-3 text-xs text-muted-foreground">
+              Trouble loading the scheduler above?{" "}
+              <a
+                href={BOOKING_URL}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="text-accent hover:underline"
+              >
+                Open it in a new tab
+              </a>
+              .
+            </p>
+          </div>
+        </div>
+
+        <div className="min-w-0 space-y-8">
+          <div className="min-w-0">
+            <h2 className="text-xs uppercase tracking-[0.2em] text-accent">Direct contact</h2>
+            <div className="mt-4 grid gap-4">
+              <a href={`tel:${digits}`} className="min-w-0">
+                <Button
+                  size="lg"
+                  className="w-full min-w-0 justify-start gap-3 whitespace-normal text-left"
+                >
+                  <Phone className="h-4 w-4 flex-shrink-0" /> Call {phone}
+                </Button>
+              </a>
+              <a
+                href={`https://wa.me/${waDigits}`}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="min-w-0"
+              >
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="w-full min-w-0 justify-start gap-3 whitespace-normal text-left"
+                >
+                  <MessageCircle className="h-4 w-4 flex-shrink-0" /> WhatsApp {phone}
                 </Button>
               </a>
               {s?.email ? (
-                <a href={`mailto:${s.email}`}>
-                  <Button size="lg" variant="ghost" className="w-full justify-start gap-3">
-                    <Mail className="h-4 w-4" /> {s.email}
+                <a href={`mailto:${s.email}`} className="min-w-0">
+                  <Button
+                    size="lg"
+                    variant="ghost"
+                    className="w-full min-w-0 justify-start gap-3 whitespace-normal text-left"
+                  >
+                    <Mail className="h-4 w-4 flex-shrink-0" />
+                    <span className="break-all">{s.email}</span>
                   </Button>
                 </a>
               ) : null}
@@ -111,7 +195,9 @@ function Contact() {
 
           <div className="rounded-lg border border-border bg-card p-6">
             <h3 className="text-sm font-semibold">Business hours</h3>
-            <p className="mt-2 text-sm text-muted-foreground">{s?.hours ?? "Contact us for current hours."}</p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {s?.hours ?? "Contact us for current hours."}
+            </p>
             <h3 className="mt-6 text-sm font-semibold">Diagnostic fee</h3>
             <p className="mt-2 text-sm text-muted-foreground">
               {s?.diagnostic_fee ?? "$95, waived when the repair is completed."}
@@ -132,44 +218,6 @@ function Contact() {
           </div>
 
           <GuaranteeBadge />
-        </div>
-
-        <div>
-          <div className="rounded-2xl border border-border bg-card p-6 md:p-8">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <h2 className="text-2xl font-semibold tracking-tight">Book your service</h2>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Pick a time that works for you — our online scheduler books your diagnostic appointment directly.
-                </p>
-              </div>
-              <a href={BOOKING_URL} target="_blank" rel="noreferrer noopener" className="hidden sm:inline-flex">
-                <Button variant="outline" className="gap-2">
-                  <CalendarClock className="h-4 w-4" /> Open scheduler
-                </Button>
-              </a>
-            </div>
-            <div className="mt-6 overflow-hidden rounded-lg border border-border">
-              <iframe
-                title="Book a service appointment online"
-                src={BOOKING_URL}
-                width="100%"
-                height="720"
-                className="border-0"
-                loading="lazy"
-              />
-            </div>
-            <a href={BOOKING_URL} target="_blank" rel="noreferrer noopener" className="mt-3 inline-flex text-sm text-accent hover:underline sm:hidden">
-              Open the scheduler in a new tab →
-            </a>
-            <p className="mt-3 text-xs text-muted-foreground">
-              Trouble loading the scheduler above?{" "}
-              <a href={BOOKING_URL} target="_blank" rel="noreferrer noopener" className="text-accent hover:underline">
-                Open it in a new tab
-              </a>
-              .
-            </p>
-          </div>
         </div>
       </section>
     </div>

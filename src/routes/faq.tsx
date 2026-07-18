@@ -1,5 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { absUrl } from "@/lib/seo";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const FAQ = [
   {
@@ -51,9 +57,9 @@ export const Route = createFileRoute("/faq")({
       },
       { property: "og:title", content: "Frequently Asked Questions" },
       { property: "og:description", content: "Answers to common appliance-repair questions." },
-      { property: "og:url", content: "/faq" },
+      { property: "og:url", content: absUrl("/faq") },
     ],
-    links: [{ rel: "canonical", href: "/faq" }],
+    links: [{ rel: "canonical", href: absUrl("/faq") }],
     scripts: [
       {
         type: "application/ld+json",
@@ -77,7 +83,9 @@ function FAQPage() {
     <div>
       <section className="border-b border-border">
         <div className="mx-auto max-w-4xl px-4 py-16 md:px-8 md:py-20">
-          <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">Frequently asked <span className="text-accent">questions</span></h1>
+          <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">
+            Frequently asked <span className="text-accent">questions</span>
+          </h1>
           <p className="mt-4 max-w-2xl text-muted-foreground">
             Everything you may want to know before scheduling a repair.
           </p>

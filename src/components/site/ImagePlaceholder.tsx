@@ -8,6 +8,12 @@ interface Props {
   src?: string | null;
   alt?: string;
   /**
+   * Optional alternate image shown at the md breakpoint and above, via a
+   * <picture> source. `src` is used as the mobile-first fallback. Only one
+   * of the two images is ever downloaded by the browser.
+   */
+  desktopSrc?: string;
+  /**
    * Mark this as the hero / above-the-fold (likely LCP) image so it loads
    * eagerly with high fetch priority instead of being lazy-loaded.
    */
@@ -32,22 +38,35 @@ export function ImagePlaceholder({
   aspect = "video",
   className,
   src,
+  desktopSrc,
   alt,
   priority = false,
   fill = false,
 }: Props) {
-  const boxClass = fill ? "absolute inset-0" : cn("overflow-hidden rounded-lg", aspectClass[aspect]);
+  const boxClass = fill
+    ? "absolute inset-0"
+    : cn("overflow-hidden rounded-lg", aspectClass[aspect]);
 
   if (src) {
+    const img = (
+      <img
+        src={src}
+        alt={alt ?? label}
+        className="h-full w-full object-cover"
+        loading={priority ? "eager" : "lazy"}
+        fetchPriority={priority ? "high" : "auto"}
+      />
+    );
     return (
       <div className={cn(boxClass, "bg-steel", className)}>
-        <img
-          src={src}
-          alt={alt ?? label}
-          className="h-full w-full object-cover"
-          loading={priority ? "eager" : "lazy"}
-          fetchPriority={priority ? "high" : "auto"}
-        />
+        {desktopSrc ? (
+          <picture>
+            <source media="(min-width: 768px)" srcSet={desktopSrc} />
+            {img}
+          </picture>
+        ) : (
+          img
+        )}
       </div>
     );
   }
@@ -55,7 +74,11 @@ export function ImagePlaceholder({
     <div
       role="img"
       aria-label={alt ?? label}
-      className={cn(boxClass, "relative flex items-center justify-center bg-steel text-steel-foreground", className)}
+      className={cn(
+        boxClass,
+        "relative flex items-center justify-center bg-steel text-steel-foreground",
+        className,
+      )}
     >
       <div aria-hidden className="bg-placeholder-gradient absolute inset-0 opacity-60" />
       <div className="relative flex flex-col items-center gap-2 text-xs uppercase tracking-widest">

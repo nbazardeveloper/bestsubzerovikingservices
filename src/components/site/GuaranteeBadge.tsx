@@ -20,7 +20,11 @@ export function GuaranteeBadge({ className, variant = "light" }: Props) {
         className,
       )}
     >
-      <img src="/images/guarantee-badge.avif" alt="Satisfaction guarantee badge" className="h-12 w-12 flex-shrink-0" />
+      <img
+        src="/images/guarantee-badge.avif"
+        alt="Satisfaction guarantee badge"
+        className="h-12 w-12 flex-shrink-0"
+      />
       <div>
         <p className={cn("text-sm font-semibold leading-tight", dark && "text-white")}>
           We stand behind every repair

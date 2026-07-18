@@ -11,9 +11,10 @@
 // That's it — nothing else in the app needs to change.
 // ============================================================================
 
-export const DB_STUBBED = true;
+export const DB_STUBBED = false;
 
 import type { SiteSettings } from "./site.functions";
+import { BLOG_POSTS } from "./blog-data";
 
 export const mockSiteSettings: SiteSettings = {
   business_name: "Best Sub-Zero & Viking Service",
@@ -207,7 +208,16 @@ export const mockServices: MockService[] = [
     id: "svc-11",
     slug: "preventive-maintenance",
     title: "Preventive Maintenance & Diagnostics",
-    brands: ["Sub-Zero", "Viking", "Wolf", "Thermador", "Bosch", "Dacor", "GE Monogram", "Bertazzoni"],
+    brands: [
+      "Sub-Zero",
+      "Viking",
+      "Wolf",
+      "Thermador",
+      "Bosch",
+      "Dacor",
+      "GE Monogram",
+      "Bertazzoni",
+    ],
     category: "Maintenance",
     short_description: "Scheduled maintenance to extend the life of premium appliances.",
     description:
@@ -287,3 +297,32 @@ export const mockProjects: MockProject[] = [
     created_at: now,
   },
 ];
+
+export type MockBlogPost = {
+  id: string;
+  slug: string;
+  title: string;
+  meta_description: string;
+  hero_image: string | null;
+  paragraphs: string[];
+  is_published: boolean;
+  source: string;
+  published_at: string;
+  created_at: string;
+};
+
+// Mirrors the blog_posts table shape. Content itself still lives in
+// blog-data.ts (single source of truth) — this just adapts it to the DB
+// row shape so the stub and the real Supabase table return identical data.
+export const mockBlogPosts: MockBlogPost[] = BLOG_POSTS.map((p) => ({
+  id: p.slug,
+  slug: p.slug,
+  title: p.title,
+  meta_description: p.metaDescription,
+  hero_image: p.heroImage,
+  paragraphs: p.paragraphs,
+  is_published: true,
+  source: "manual",
+  published_at: p.publishedAt,
+  created_at: p.publishedAt,
+}));

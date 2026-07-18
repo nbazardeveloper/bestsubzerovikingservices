@@ -1,8 +1,8 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { BLOG_POSTS } from "@/lib/blog-data";
-import { buildTitle, buildMetaDescription } from "@/lib/seo";
+import { getBlogPostBySlug } from "@/lib/site.functions";
+import { buildTitle, buildMetaDescription, absUrl } from "@/lib/seo";
 
 // A paragraph entry is treated as a subheading (not body copy) when it's
 // short and doesn't end like a sentence — matches how the source articles
@@ -13,8 +13,8 @@ function isHeading(s: string): boolean {
 }
 
 export const Route = createFileRoute("/post/$slug")({
-  loader: ({ params }) => {
-    const post = BLOG_POSTS.find((p) => p.slug === params.slug);
+  loader: async ({ params }) => {
+    const post = await getBlogPostBySlug({ data: { slug: params.slug } });
     if (!post) throw notFound();
     return { post };
   },
@@ -24,18 +24,18 @@ export const Route = createFileRoute("/post/$slug")({
     }
     const { post } = loaderData;
     const title = buildTitle(post.title);
-    const description = buildMetaDescription(post.metaDescription, post.paragraphs.join(" "));
+    const description = buildMetaDescription(post.meta_description, post.paragraphs.join(" "));
     return {
       meta: [
         { title },
         { name: "description", content: description },
         { property: "og:title", content: post.title },
         { property: "og:description", content: description },
-        { property: "og:url", content: `/post/${post.slug}` },
+        { property: "og:url", content: absUrl(`/post/${post.slug}`) },
         { property: "og:type", content: "article" },
-        { property: "og:image", content: post.heroImage },
+        { property: "og:image", content: post.hero_image ?? undefined },
       ],
-      links: [{ rel: "canonical", href: `/post/${post.slug}` }],
+      links: [{ rel: "canonical", href: absUrl(`/post/${post.slug}`) }],
       scripts: [
         {
           type: "application/ld+json",
@@ -44,9 +44,9 @@ export const Route = createFileRoute("/post/$slug")({
             "@type": "BlogPosting",
             headline: post.title,
             description,
-            image: post.heroImage,
-            datePublished: post.publishedAt,
-            dateModified: post.publishedAt,
+            image: post.hero_image,
+            datePublished: post.published_at,
+            dateModified: post.published_at,
             author: { "@type": "Organization", name: "Best Sub-Zero & Viking Service" },
             publisher: {
               "@type": "Organization",
@@ -63,7 +63,9 @@ export const Route = createFileRoute("/post/$slug")({
     <div className="mx-auto max-w-2xl px-4 py-24 text-center">
       <h1 className="text-3xl font-semibold">Post not found</h1>
       <p className="mt-3 text-muted-foreground">This article doesn't exist or has been moved.</p>
-      <Link to="/blog" className="mt-6 inline-flex text-accent hover:underline">Back to blog</Link>
+      <Link to="/blog" className="mt-6 inline-flex text-accent hover:underline">
+        Back to blog
+      </Link>
     </div>
   ),
   component: PostDetail,
@@ -76,12 +78,19 @@ function PostDetail() {
     <div>
       <section className="border-b border-border">
         <div className="mx-auto max-w-3xl px-4 py-14 md:px-8">
-          <Link to="/blog" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+          <Link
+            to="/blog"
+            className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+          >
             <ArrowLeft className="h-3 w-3" /> All articles
           </Link>
           <h1 className="mt-6 text-3xl font-semibold tracking-tight md:text-4xl">{post.title}</h1>
           <p className="mt-3 text-sm text-muted-foreground">
-            {new Date(post.publishedAt).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
+            {new Date(post.published_at).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
           </p>
         </div>
       </section>
@@ -89,7 +98,7 @@ function PostDetail() {
       <section className="mx-auto max-w-3xl px-4 py-10 md:px-8">
         <div className="overflow-hidden rounded-lg">
           <img
-            src={post.heroImage}
+            src={post.hero_image ?? undefined}
             alt={post.title}
             className="h-full w-full object-cover"
             loading="eager"
@@ -123,7 +132,9 @@ function PostDetail() {
               </Button>
             </a>
             <Link to="/contact">
-              <Button size="lg" variant="outline">Request service</Button>
+              <Button size="lg" variant="outline">
+                Request service
+              </Button>
             </Link>
           </div>
         </div>

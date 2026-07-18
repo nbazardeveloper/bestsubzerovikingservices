@@ -44,7 +44,9 @@ export function AnniversaryBadge({ className }: Props) {
         className="absolute inset-[21%] flex flex-col items-center justify-center rounded-full bg-accent text-accent-foreground shadow-md"
       >
         <span className="text-2xl font-bold leading-none md:text-3xl">13</span>
-        <span className="mt-1 text-[10px] font-semibold uppercase tracking-wide md:text-xs">Years</span>
+        <span className="mt-1 text-[10px] font-semibold uppercase tracking-wide md:text-xs">
+          Years
+        </span>
       </div>
     </div>
   );

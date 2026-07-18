@@ -1,36 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { absUrl } from "@/lib/seo";
 import { useQuery } from "@tanstack/react-query";
 import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { GoogleIcon, YelpIcon } from "@/components/site/BrandIcons";
 import { getSiteSettings } from "@/lib/site.functions";
-
-const REVIEWS = [
-  {
-    quote:
-      "They diagnosed the issue with our Sub-Zero the same day, explained it clearly and charged exactly what they quoted. Rare care for high-end appliances.",
-    author: "Placeholder Customer",
-    area: "Staten Island",
-  },
-  {
-    quote:
-      "Our Viking range hadn't been the same for months. They rebuilt the ignition system and it now runs perfectly. Professional from start to finish.",
-    author: "Placeholder Customer",
-    area: "Brooklyn",
-  },
-  {
-    quote:
-      "Wolf double oven control board — replaced the same week, both cavities recalibrated. Communication was clear and the price matched the quote.",
-    author: "Placeholder Customer",
-    area: "Long Island",
-  },
-  {
-    quote:
-      "Thermador induction cooktop back to full function. Honest, transparent and thorough — exactly the service premium appliances deserve.",
-    author: "Placeholder Customer",
-    area: "Jersey City",
-  },
-];
+import { SITE_REVIEWS } from "@/lib/reviews-data";
 
 export const Route = createFileRoute("/reviews")({
   head: () => ({
@@ -43,15 +18,18 @@ export const Route = createFileRoute("/reviews")({
       },
       { property: "og:title", content: "Customer Reviews" },
       { property: "og:description", content: "Feedback from NY & NJ customers." },
-      { property: "og:url", content: "/reviews" },
+      { property: "og:url", content: absUrl("/reviews") },
     ],
-    links: [{ rel: "canonical", href: "/reviews" }],
+    links: [{ rel: "canonical", href: absUrl("/reviews") }],
   }),
   component: Reviews,
 });
 
 function Reviews() {
-  const { data: settings } = useQuery({ queryKey: ["site-settings"], queryFn: () => getSiteSettings() });
+  const { data: settings } = useQuery({
+    queryKey: ["site-settings"],
+    queryFn: () => getSiteSettings(),
+  });
   const googleUrl = settings?.social_links?.google_reviews;
   const yelpUrl = settings?.social_links?.yelp;
 
@@ -59,16 +37,22 @@ function Reviews() {
     <div>
       <section className="border-b border-border">
         <div className="mx-auto max-w-4xl px-4 py-16 md:px-8 md:py-20">
-          <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">Customer <span className="text-accent">reviews</span></h1>
+          <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">
+            Customer <span className="text-accent">reviews</span>
+          </h1>
           <p className="mt-4 max-w-2xl text-muted-foreground">
-            We're proud of the reputation we've built repairing premium kitchen appliances across NY &amp; NJ.
+            We're proud of the reputation we've built repairing premium kitchen appliances across NY
+            &amp; NJ.
           </p>
 
           {settings?.review_rating ? (
             <div className="mt-8 flex items-center gap-3">
               <div className="flex" aria-label={`${settings.review_rating} out of 5`}>
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <Star key={i} className={`h-5 w-5 ${i < Math.round(settings.review_rating!) ? "fill-accent text-accent" : "text-muted-foreground"}`} />
+                  <Star
+                    key={i}
+                    className={`h-5 w-5 ${i < Math.round(settings.review_rating!) ? "fill-accent text-accent" : "text-muted-foreground"}`}
+                  />
                 ))}
               </div>
               <span className="text-sm text-muted-foreground">
@@ -100,11 +84,8 @@ function Reviews() {
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-16 md:px-8">
-        <div className="rounded-md border border-dashed border-accent/50 bg-accent/5 p-4 text-sm text-muted-foreground">
-          The testimonials below are <strong>PLACEHOLDER — TO REPLACE WITH REAL GOOGLE REVIEWS</strong>.
-        </div>
-        <div className="mt-8 grid gap-6 md:grid-cols-2">
-          {REVIEWS.map((r, i) => (
+        <div className="grid gap-6 md:grid-cols-2">
+          {SITE_REVIEWS.map((r, i) => (
             <blockquote key={i} className="rounded-lg border border-border bg-card p-6">
               <div className="flex" aria-hidden>
                 {Array.from({ length: 5 }).map((_, s) => (
@@ -113,7 +94,12 @@ function Reviews() {
               </div>
               <p className="mt-4 text-base">&ldquo;{r.quote}&rdquo;</p>
               <footer className="mt-4 text-xs uppercase tracking-widest text-muted-foreground">
-                {r.author} · {r.area}
+                {r.author} · {r.time}
+                {r.service ? (
+                  <span className="mt-1 block normal-case tracking-normal text-muted-foreground/80">
+                    {r.service}
+                  </span>
+                ) : null}
               </footer>
             </blockquote>
           ))}

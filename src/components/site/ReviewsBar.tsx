@@ -10,7 +10,14 @@ function Stars({ rating, dark }: { rating: number; dark?: boolean }) {
       {Array.from({ length: 5 }).map((_, i) => (
         <Star
           key={i}
-          className={cn("h-3.5 w-3.5", i < Math.round(rating) ? "fill-accent text-accent" : dark ? "text-white/30" : "text-border")}
+          className={cn(
+            "h-3.5 w-3.5",
+            i < Math.round(rating)
+              ? "fill-accent text-accent"
+              : dark
+                ? "text-white/30"
+                : "text-border",
+          )}
         />
       ))}
     </div>
@@ -29,14 +36,20 @@ interface Props {
 // admin has entered one; otherwise it's still a clean, clickable badge.
 export function ReviewsBar({ className, variant = "light" }: Props) {
   const dark = variant === "dark";
-  const { data: s } = useQuery({ queryKey: ["site-settings"], queryFn: () => getSiteSettings(), staleTime: 5 * 60 * 1000 });
+  const { data: s } = useQuery({
+    queryKey: ["site-settings"],
+    queryFn: () => getSiteSettings(),
+    staleTime: 5 * 60 * 1000,
+  });
   const googleUrl = s?.social_links?.google_reviews;
   const yelpUrl = s?.social_links?.yelp;
   if (!googleUrl && !yelpUrl) return null;
 
   const pillClass = cn(
     "inline-flex items-center gap-2 rounded-lg border px-3 py-2 transition-colors",
-    dark ? "border-white/20 bg-white/5 hover:bg-white/10" : "border-border bg-card hover:border-accent",
+    dark
+      ? "border-white/20 bg-white/5 hover:bg-white/10"
+      : "border-border bg-card hover:border-accent",
   );
 
   return (
@@ -53,7 +66,9 @@ export function ReviewsBar({ className, variant = "light" }: Props) {
               </span>
             </span>
           ) : (
-            <span className={cn("text-xs font-medium", dark ? "text-white" : "text-foreground")}>Google Reviews</span>
+            <span className={cn("text-xs font-medium", dark ? "text-white" : "text-foreground")}>
+              Google Reviews
+            </span>
           )}
         </a>
       ) : null}
@@ -69,7 +84,9 @@ export function ReviewsBar({ className, variant = "light" }: Props) {
               </span>
             </span>
           ) : (
-            <span className={cn("text-xs font-medium", dark ? "text-white" : "text-foreground")}>Yelp Reviews</span>
+            <span className={cn("text-xs font-medium", dark ? "text-white" : "text-foreground")}>
+              Yelp Reviews
+            </span>
           )}
         </a>
       ) : null}

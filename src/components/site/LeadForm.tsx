@@ -23,12 +23,24 @@ const AREAS = [
 const schema = z.object({
   name: z.string().trim().min(1, "Please add your name").max(200),
   phone: z.string().trim().min(5, "Please add a phone number").max(40),
-  email: z.string().trim().email("Please enter a valid email").max(320).or(z.literal("")).optional(),
+  email: z
+    .string()
+    .trim()
+    .email("Please enter a valid email")
+    .max(320)
+    .or(z.literal(""))
+    .optional(),
   service_area: z.string().max(80).optional(),
   message: z.string().trim().max(5000).optional(),
 });
 
-export function LeadForm({ sourcePage, compact = false }: { sourcePage: string; compact?: boolean }) {
+export function LeadForm({
+  sourcePage,
+  compact = false,
+}: {
+  sourcePage: string;
+  compact?: boolean;
+}) {
   const submit = useServerFn(submitLead);
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
@@ -58,7 +70,9 @@ export function LeadForm({ sourcePage, compact = false }: { sourcePage: string; 
       toast.success("Thanks — we'll get back to you shortly.");
       (e.target as HTMLFormElement).reset();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Something went wrong. Please call us instead.");
+      toast.error(
+        err instanceof Error ? err.message : "Something went wrong. Please call us instead.",
+      );
     } finally {
       setLoading(false);
     }
@@ -68,7 +82,9 @@ export function LeadForm({ sourcePage, compact = false }: { sourcePage: string; 
     return (
       <div className="rounded-lg border border-border bg-card p-6 text-sm">
         <p className="font-medium">Request received.</p>
-        <p className="mt-2 text-muted-foreground">A technician will contact you shortly. For same-day help, please call us directly.</p>
+        <p className="mt-2 text-muted-foreground">
+          A technician will contact you shortly. For same-day help, please call us directly.
+        </p>
       </div>
     );
   }
@@ -87,7 +103,9 @@ export function LeadForm({ sourcePage, compact = false }: { sourcePage: string; 
       </div>
       <div className={compact ? "grid gap-4" : "grid gap-4 md:grid-cols-2"}>
         <div className="grid gap-1.5">
-          <Label htmlFor="email">Email <span className="text-muted-foreground">(optional)</span></Label>
+          <Label htmlFor="email">
+            Email <span className="text-muted-foreground">(optional)</span>
+          </Label>
           <Input id="email" name="email" type="email" autoComplete="email" />
         </div>
         <div className="grid gap-1.5">
@@ -98,22 +116,33 @@ export function LeadForm({ sourcePage, compact = false }: { sourcePage: string; 
             defaultValue=""
             className="h-10 rounded-md border border-input bg-background px-3 text-sm"
           >
-            <option value="" disabled>Select an area…</option>
+            <option value="" disabled>
+              Select an area…
+            </option>
             {AREAS.map((a) => (
-              <option key={a} value={a}>{a}</option>
+              <option key={a} value={a}>
+                {a}
+              </option>
             ))}
           </select>
         </div>
       </div>
       <div className="grid gap-1.5">
         <Label htmlFor="message">Appliance &amp; problem</Label>
-        <Textarea id="message" name="message" rows={4} placeholder="Brand, model number, and a short description of the issue." />
+        <Textarea
+          id="message"
+          name="message"
+          rows={4}
+          placeholder="Brand, model number, and a short description of the issue."
+        />
       </div>
       <div className="flex flex-wrap items-center gap-3">
         <Button type="submit" disabled={loading}>
           {loading ? "Sending…" : "Request service"}
         </Button>
-        <p className="text-xs text-muted-foreground">By submitting, you agree to be contacted about your request.</p>
+        <p className="text-xs text-muted-foreground">
+          By submitting, you agree to be contacted about your request.
+        </p>
       </div>
     </form>
   );

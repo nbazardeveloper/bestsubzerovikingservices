@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
-import { DB_STUBBED, mockSiteSettings, mockServices, mockProjects } from "./db-stub";
+import { DB_STUBBED, mockSiteSettings, mockServices, mockProjects, mockBlogPosts } from "./db-stub";
 
 function serverPublicClient() {
   const url = process.env.SUPABASE_URL!;
@@ -11,7 +11,8 @@ function serverPublicClient() {
     global: {
       fetch: (input, init) => {
         const h = new Headers(init?.headers);
-        if (key.startsWith("sb_") && h.get("Authorization") === `Bearer ${key}`) h.delete("Authorization");
+        if (key.startsWith("sb_") && h.get("Authorization") === `Bearer ${key}`)
+          h.delete("Authorization");
         h.set("apikey", key);
         return fetch(input, { ...init, headers: h });
       },
@@ -33,26 +34,28 @@ export type SiteSettings = {
   yelp_review_rating: number | null;
 };
 
-export const getSiteSettings = createServerFn({ method: "GET" }).handler(async (): Promise<SiteSettings> => {
-  if (DB_STUBBED) return mockSiteSettings;
-  const s = serverPublicClient();
-  const { data, error } = await s.from("site_settings").select("*").eq("id", 1).maybeSingle();
-  if (error) throw new Error(error.message);
-  if (!data) throw new Error("Site settings missing");
-  return {
-    business_name: data.business_name,
-    phone: data.phone,
-    email: data.email,
-    address: data.address,
-    hours: data.hours,
-    diagnostic_fee: data.diagnostic_fee,
-    social_links: (data.social_links as Record<string, string>) ?? {},
-    review_count: data.review_count,
-    review_rating: data.review_rating,
-    yelp_review_count: data.yelp_review_count,
-    yelp_review_rating: data.yelp_review_rating,
-  };
-});
+export const getSiteSettings = createServerFn({ method: "GET" }).handler(
+  async (): Promise<SiteSettings> => {
+    if (DB_STUBBED) return mockSiteSettings;
+    const s = serverPublicClient();
+    const { data, error } = await s.from("site_settings").select("*").eq("id", 1).maybeSingle();
+    if (error) throw new Error(error.message);
+    if (!data) throw new Error("Site settings missing");
+    return {
+      business_name: data.business_name,
+      phone: data.phone,
+      email: data.email,
+      address: data.address,
+      hours: data.hours,
+      diagnostic_fee: data.diagnostic_fee,
+      social_links: (data.social_links as Record<string, string>) ?? {},
+      review_count: data.review_count,
+      review_rating: data.review_rating,
+      yelp_review_count: data.yelp_review_count,
+      yelp_review_rating: data.yelp_review_rating,
+    };
+  },
+);
 
 export const listServices = createServerFn({ method: "GET" }).handler(async () => {
   if (DB_STUBBED) return mockServices;
@@ -119,21 +122,51 @@ export const listFeaturedProjects = createServerFn({ method: "GET" }).handler(as
   return data ?? [];
 });
 
+export const listBlogPosts = createServerFn({ method: "GET" }).handler(async () => {
+  if (DB_STUBBED)
+    return [...mockBlogPosts].sort((a, b) => (a.published_at < b.published_at ? 1 : -1));
+  const s = serverPublicClient();
+  const { data, error } = await s
+    .from("blog_posts")
+    .select("*")
+    .eq("is_published", true)
+    .order("published_at", { ascending: false });
+  if (error) throw new Error(error.message);
+  return data ?? [];
+});
+
+export const getBlogPostBySlug = createServerFn({ method: "GET" })
+  .inputValidator((d: { slug: string }) => d)
+  .handler(async ({ data }) => {
+    if (DB_STUBBED) return mockBlogPosts.find((p) => p.slug === data.slug) ?? null;
+    const s = serverPublicClient();
+    const { data: row, error } = await s
+      .from("blog_posts")
+      .select("*")
+      .eq("slug", data.slug)
+      .eq("is_published", true)
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    return row;
+  });
+
 export const submitLead = createServerFn({ method: "POST" })
-  .inputValidator((d: {
-    name: string;
-    phone: string;
-    email?: string;
-    service_area?: string;
-    message?: string;
-    source_page?: string;
-  }) => {
-    if (!d.name || d.name.length < 1 || d.name.length > 200) throw new Error("Invalid name");
-    if (!d.phone || d.phone.length < 5 || d.phone.length > 40) throw new Error("Invalid phone");
-    if (d.email && d.email.length > 320) throw new Error("Invalid email");
-    if (d.message && d.message.length > 5000) throw new Error("Message too long");
-    return d;
-  })
+  .inputValidator(
+    (d: {
+      name: string;
+      phone: string;
+      email?: string;
+      service_area?: string;
+      message?: string;
+      source_page?: string;
+    }) => {
+      if (!d.name || d.name.length < 1 || d.name.length > 200) throw new Error("Invalid name");
+      if (!d.phone || d.phone.length < 5 || d.phone.length > 40) throw new Error("Invalid phone");
+      if (d.email && d.email.length > 320) throw new Error("Invalid email");
+      if (d.message && d.message.length > 5000) throw new Error("Message too long");
+      return d;
+    },
+  )
   .handler(async ({ data }) => {
     if (DB_STUBBED) {
       console.warn("[db-stub] submitLead called while DB is stubbed — lead was NOT saved:", data);

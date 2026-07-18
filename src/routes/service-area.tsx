@@ -1,16 +1,44 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { absUrl } from "@/lib/seo";
 import { MapPin } from "lucide-react";
-import { ImagePlaceholder } from "@/components/site/ImagePlaceholder";
 
 const AREAS = [
-  { name: "Staten Island", blurb: "Our home base. We know Staten Island neighborhoods and can typically reach customers same day when schedules allow." },
-  { name: "Brooklyn", blurb: "Regular routes throughout Brooklyn, from brownstones to modern condos with built-in Sub-Zero and Wolf." },
-  { name: "Queens", blurb: "Coverage across Queens for premium refrigeration, ranges and ovens in single-family and multi-family homes." },
-  { name: "Long Island", blurb: "Nassau and western Suffolk coverage for Sub-Zero, Viking and Wolf installations." },
-  { name: "Great Neck", blurb: "Frequent service in Great Neck and surrounding North Shore communities." },
-  { name: "Jersey City", blurb: "High-rise and townhouse service across Jersey City for premium residential kitchens." },
-  { name: "Elizabeth, NJ", blurb: "Serving Elizabeth NJ homeowners for repair and preventive maintenance." },
-  { name: "North & Central NJ", blurb: "Broader coverage across North and Central New Jersey for high-end residential appliances." },
+  {
+    name: "Staten Island",
+    blurb:
+      "Our home base. We know Staten Island neighborhoods and can typically reach customers same day when schedules allow.",
+  },
+  {
+    name: "Brooklyn",
+    blurb:
+      "Regular routes throughout Brooklyn, from brownstones to modern condos with built-in Sub-Zero and Wolf.",
+  },
+  {
+    name: "Queens",
+    blurb:
+      "Coverage across Queens for premium refrigeration, ranges and ovens in single-family and multi-family homes.",
+  },
+  {
+    name: "Long Island",
+    blurb: "Nassau and western Suffolk coverage for Sub-Zero, Viking and Wolf installations.",
+  },
+  {
+    name: "Great Neck",
+    blurb: "Frequent service in Great Neck and surrounding North Shore communities.",
+  },
+  {
+    name: "Jersey City",
+    blurb: "High-rise and townhouse service across Jersey City for premium residential kitchens.",
+  },
+  {
+    name: "Elizabeth, NJ",
+    blurb: "Serving Elizabeth NJ homeowners for repair and preventive maintenance.",
+  },
+  {
+    name: "North & Central NJ",
+    blurb:
+      "Broader coverage across North and Central New Jersey for high-end residential appliances.",
+  },
 ];
 
 export const Route = createFileRoute("/service-area")({
@@ -24,9 +52,9 @@ export const Route = createFileRoute("/service-area")({
       },
       { property: "og:title", content: "Service Area" },
       { property: "og:description", content: "Where we repair premium kitchen appliances." },
-      { property: "og:url", content: "/service-area" },
+      { property: "og:url", content: absUrl("/service-area") },
     ],
-    links: [{ rel: "canonical", href: "/service-area" }],
+    links: [{ rel: "canonical", href: absUrl("/service-area") }],
   }),
   component: ServiceArea,
 });
@@ -36,10 +64,13 @@ function ServiceArea() {
     <div>
       <section className="border-b border-border">
         <div className="mx-auto max-w-7xl px-4 py-16 md:px-8 md:py-20">
-          <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">Service <span className="text-accent">area</span></h1>
+          <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">
+            Service <span className="text-accent">area</span>
+          </h1>
           <p className="mt-4 max-w-2xl text-muted-foreground">
             We serve homeowners across the New York metro and Northern &amp; Central New Jersey.
-            Same-day service depends on technician availability — we'll tell you honestly when we can be there.
+            Same-day service depends on technician availability — we'll tell you honestly when we
+            can be there.
           </p>
         </div>
       </section>
@@ -58,10 +89,12 @@ function ServiceArea() {
 
       <section className="border-t border-border bg-muted/30">
         <div className="mx-auto max-w-7xl px-4 py-16 md:px-8">
-          <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">Our completed <span className="text-accent">jobs</span></h2>
+          <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">
+            Our completed <span className="text-accent">jobs</span>
+          </h2>
           <p className="mt-3 text-muted-foreground">
-            A real map of repairs we've completed across the New York metro and New Jersey — centered on Staten Island,
-            radiating out through the service area above.
+            A real map of repairs we've completed across the New York metro and New Jersey —
+            centered on Staten Island, radiating out through the service area above.
           </p>
           <div className="mt-8 overflow-hidden rounded-lg border border-border">
             <iframe

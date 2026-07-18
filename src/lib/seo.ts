@@ -4,6 +4,16 @@
 // (DB-driven) content such as individual service pages.
 
 const SITE_NAME = "Best Sub-Zero & Viking Service";
+const SITE_URL = "https://bestsubzerovikingservices.com";
+
+/**
+ * Turns a site-relative path into an absolute URL. Canonical links and
+ * og:url must be absolute — a relative canonical (e.g. href="/") is invalid
+ * per spec and gets flagged by SEO audits (Lighthouse "canonical" audit).
+ */
+export function absUrl(path: string): string {
+  return `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;
+}
 
 const TITLE_SUFFIXES = [
   ` | Sub-Zero & Viking Repair Experts in NY & NJ`,

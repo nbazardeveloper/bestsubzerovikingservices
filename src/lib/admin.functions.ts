@@ -1,5 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import type { Database } from "@/integrations/supabase/types";
 import { DB_STUBBED, mockServices, mockProjects } from "./db-stub";
 
 // While DB_STUBBED is true, mock lists/writes below are mutated in-memory
@@ -18,7 +20,7 @@ const stubLeads: Array<{
 let stubServices = [...mockServices];
 let stubProjects = [...mockProjects];
 
-async function assertAdmin(ctx: { supabase: any; userId: string }) {
+async function assertAdmin(ctx: { supabase: SupabaseClient<Database>; userId: string }) {
   if (DB_STUBBED) return; // DB disconnected — skip the role lookup
   const { data, error } = await ctx.supabase
     .from("user_roles")
@@ -47,7 +49,8 @@ export const adminListLeads = createServerFn({ method: "GET" })
 export const adminUpdateLeadStatus = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: { id: string; status: string }) => {
-    if (!["new", "contacted", "scheduled", "done"].includes(d.status)) throw new Error("Bad status");
+    if (!["new", "contacted", "scheduled", "done"].includes(d.status))
+      throw new Error("Bad status");
     return d;
   })
   .handler(async ({ data, context }) => {
@@ -57,7 +60,10 @@ export const adminUpdateLeadStatus = createServerFn({ method: "POST" })
       if (lead) lead.status = data.status;
       return { ok: true };
     }
-    const { error } = await context.supabase.from("leads").update({ status: data.status }).eq("id", data.id);
+    const { error } = await context.supabase
+      .from("leads")
+      .update({ status: data.status })
+      .eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
   });

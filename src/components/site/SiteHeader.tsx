@@ -45,18 +45,33 @@ export function SiteHeader() {
           />
         </Link>
 
-        {/* Mobile logo — no CTA bar on mobile, so a normal small logo is fine. */}
-        <Link to="/" className="flex items-center gap-3 md:hidden" aria-label="Best Sub-Zero & Viking Service — home">
-          <img src="/images/logo.webp" alt="Best Sub-Zero & Viking Service logo" className="h-12 w-12 flex-shrink-0" />
-          <span className="text-base font-semibold tracking-tight">Best Sub-Zero &amp; Viking Service</span>
+        {/* Mobile logo — no CTA bar on mobile, so a normal small logo is fine.
+            No aria-label here: the visible name text already gives this link
+            an accessible name, and the logo is decorative (alt="") so it
+            doesn't get concatenated into a mismatched accessible name. */}
+        <Link to="/" className="flex items-center gap-3 md:hidden">
+          <img
+            src="/images/logo.webp"
+            alt=""
+            width={395}
+            height={420}
+            className="h-12 w-auto flex-shrink-0"
+          />
+          <span className="text-base font-semibold tracking-tight">
+            Best Sub-Zero &amp; Viking Service
+          </span>
         </Link>
 
         {/* Business name/tagline — pushed right to clear the big logo. Hidden
             once the full nav takes over (xl+) so the 9 nav items get the
             whole row instead of fighting the name text for space. */}
         <div className="hidden flex-col leading-tight md:ml-40 md:flex lg:ml-44 xl:hidden">
-          <span className="text-base font-semibold tracking-tight">Best Sub-Zero &amp; Viking Service</span>
-          <span className="text-sm text-muted-foreground">Premium appliance repair · NY &amp; NJ</span>
+          <span className="text-base font-semibold tracking-tight">
+            Best Sub-Zero &amp; Viking Service
+          </span>
+          <span className="text-sm text-muted-foreground">
+            Premium appliance repair · NY &amp; NJ
+          </span>
         </div>
 
         {/* Wrapper takes the remaining row width after the logo (xl:ml-44)
@@ -79,20 +94,35 @@ export function SiteHeader() {
           </nav>
         </div>
 
-        <button
-          type="button"
-          className="xl:hidden inline-flex h-9 w-9 items-center justify-center rounded-md border border-border"
-          aria-label={open ? "Close menu" : "Open menu"}
-          onClick={() => setOpen((v) => !v)}
-        >
-          {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-        </button>
+        <div className="flex items-center gap-2 xl:hidden">
+          {/* Mobile-only quick-call icon — mobile has no room for the desktop
+              CTA bar's phone number, so this gives phone-first visitors a
+              one-tap call action directly in the header. */}
+          <a
+            href={telHref}
+            aria-label={`Call ${phone}`}
+            className="inline-flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-accent text-accent-foreground md:hidden"
+          >
+            <Phone className="h-4 w-4" />
+          </a>
+          <button
+            type="button"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border"
+            aria-label={open ? "Close menu" : "Open menu"}
+            onClick={() => setOpen((v) => !v)}
+          >
+            {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+          </button>
+        </div>
       </div>
 
       {/* CTA bar — phone + primary action, full width, high contrast. */}
       <div className="hidden bg-primary text-primary-foreground md:block">
         <div className="mx-auto flex h-14 max-w-7xl items-center justify-end gap-6 px-4 md:px-8">
-          <a href={telHref} className="inline-flex items-center gap-2 text-lg font-semibold tabular-nums hover:text-accent">
+          <a
+            href={telHref}
+            className="inline-flex items-center gap-2 text-lg font-semibold tabular-nums hover:text-accent"
+          >
             <Phone className="h-4 w-4" aria-hidden /> {phone}
           </a>
           <Link to="/contact">
@@ -105,7 +135,10 @@ export function SiteHeader() {
 
       {open ? (
         <div className="xl:hidden border-t border-border bg-background">
-          <nav aria-label="Mobile" className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-4 text-sm">
+          <nav
+            aria-label="Mobile"
+            className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-4 text-sm"
+          >
             {nav.map((n) => (
               <Link
                 key={n.to}

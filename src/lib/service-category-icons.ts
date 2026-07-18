@@ -1,24 +1,53 @@
 import type { ComponentType, SVGProps } from "react";
-import { Wind, Sun, Wrench } from "lucide-react";
-import { FridgeIcon, StoveIcon, MaintenanceIcon } from "@/components/site/icons/ServiceCategoryIcons";
+import { Wrench } from "lucide-react";
+import {
+  FridgeIcon,
+  StoveIcon,
+  MaintenanceIcon,
+  CooktopIcon,
+  MicrowaveIcon,
+  RangeHoodIcon,
+  IceMakerIcon,
+  WineCoolerIcon,
+  BbqIcon,
+} from "@/components/site/icons/ServiceCategoryIcons";
 
 type CategoryIcon = ComponentType<SVGProps<SVGSVGElement>>;
 
-// Maps each service `category` value (see db-stub.ts MockService) to a
-// representative icon, used as the small badge overlapping the service card
-// thumbnail. Refrigeration/Cooking/Maintenance use the client-supplied
-// custom icons; Ventilation/Outdoor fall back to Lucide until matching
-// custom icons are provided. Falls back to Wrench for any unmapped category.
+// Broad category fallback, used when a service's slug doesn't have a more
+// specific icon below.
 export const SERVICE_CATEGORY_ICONS: Record<string, CategoryIcon> = {
   Refrigeration: FridgeIcon,
   Cooking: StoveIcon,
-  Ventilation: Wind,
-  Outdoor: Sun,
+  Ventilation: RangeHoodIcon,
+  Outdoor: BbqIcon,
   Maintenance: MaintenanceIcon,
+};
+
+// Per-service overrides, keyed by the service's `slug` (see db-stub.ts
+// MockService / the `services` table). Lets appliance-specific services
+// within the same broad category (e.g. several "Cooking" services) show
+// their own icon instead of sharing one generic category icon.
+export const SERVICE_SLUG_ICONS: Record<string, CategoryIcon> = {
+  "refrigerator-freezer-repair": FridgeIcon,
+  "wine-cooler-repair": WineCoolerIcon,
+  "ice-maker-repair": IceMakerIcon,
+  "range-stove-repair": StoveIcon,
+  "cooktop-repair": CooktopIcon,
+  "range-hood-repair": RangeHoodIcon,
+  "outdoor-kitchen-bbq-repair": BbqIcon,
+  "microwave-repair": MicrowaveIcon,
+  "preventive-maintenance": MaintenanceIcon,
 };
 
 export function getServiceCategoryIcon(category: string): CategoryIcon {
   return SERVICE_CATEGORY_ICONS[category] ?? Wrench;
+}
+
+// Preferred lookup for a service card: tries the service's own slug first,
+// then falls back to its broad category, then a generic wrench.
+export function getServiceIcon(service: { slug: string; category: string }): CategoryIcon {
+  return SERVICE_SLUG_ICONS[service.slug] ?? getServiceCategoryIcon(service.category);
 }
 
 // The fridge icon's source artwork is naturally narrow/tall (a fridge is
