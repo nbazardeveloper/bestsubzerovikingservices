@@ -34,8 +34,11 @@ export const Route = createFileRoute("/sitemap.xml")({
           projects = mockProjects.filter((p) => p.is_published).map((p) => ({ slug: p.slug }));
           posts = mockBlogPosts.filter((p) => p.is_published).map((p) => ({ slug: p.slug }));
         } else {
-          const url = process.env.SUPABASE_URL!;
-          const key = process.env.SUPABASE_PUBLISHABLE_KEY!;
+          // Prefer build-time VITE_ vars — they survive Cloudflare "Retry
+          // build" runs, unlike plaintext runtime vars (see auth-middleware.ts).
+          const url = import.meta.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL!;
+          const key =
+            import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_PUBLISHABLE_KEY!;
           const s = createClient<Database>(url, key, {
             auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
           });

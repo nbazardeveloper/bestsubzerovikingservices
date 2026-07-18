@@ -32,7 +32,11 @@ function createSupabaseFetch(supabaseKey: string): typeof fetch {
 }
 
 function createSupabaseAdminClient() {
-  const SUPABASE_URL = process.env.SUPABASE_URL;
+  // The URL isn't sensitive, so it can safely fall back to the build-time
+  // VITE_ var (survives Cloudflare "Retry build" runs — see
+  // auth-middleware.ts). The service-role key must stay runtime-only/secret
+  // and is never baked into the bundle.
+  const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
   const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
