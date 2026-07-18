@@ -23,6 +23,28 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Self-hosted fonts (was Google Fonts CDN) — avoids the extra render-blocking
+ * cross-origin request + connection setup that a <link rel="stylesheet"> to
+ * fonts.googleapis.com costs on every first visit. Both files below are
+ * variable-ish latin subsets Google itself serves for every requested static
+ * weight (400–800 for Montserrat, 400/600/700 for Open Sans all resolve to
+ * the same physical file — that's normal, not a bug), so this is a drop-in
+ * replacement of the exact same bytes, just same-origin. */
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("/fonts/montserrat-latin.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/opensans-latin.woff2") format("woff2");
+}
+
 /* 2. Theme tokens -----------------------------------------------------------
  * Font pairing: Montserrat (headings, nav/menu, buttons and other accents) +
  * Open Sans (body copy/descriptions). Palette: white / near-black /
