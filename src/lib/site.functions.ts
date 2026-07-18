@@ -4,8 +4,21 @@ import type { Database } from "@/integrations/supabase/types";
 import { DB_STUBBED, mockSiteSettings, mockServices, mockProjects, mockBlogPosts } from "./db-stub";
 
 function serverPublicClient() {
-  const url = process.env.SUPABASE_URL!;
-  const key = process.env.SUPABASE_PUBLISHABLE_KEY!;
+  // Prefer the build-time VITE_ vars (baked into the bundle by Vite and
+  // unaffected by Cloudflare "Retry build" runs, which reset plaintext
+  // runtime vars/secrets that aren't declared in wrangler.json) and fall
+  // back to the runtime env vars for local/dev.
+  const url = import.meta.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
+  const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_PUBLISHABLE_KEY;
+  if (!url || !key) {
+    const missing = [
+      ...(!url ? ["SUPABASE_URL"] : []),
+      ...(!key ? ["SUPABASE_PUBLISHABLE_KEY"] : []),
+    ];
+    throw new Error(
+      `Missing Supabase environment variable(s): ${missing.join(", ")}. Set them in your .env file.`,
+    );
+  }
   return createClient<Database>(url, key, {
     auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
     global: {
