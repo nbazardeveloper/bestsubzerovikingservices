@@ -177,11 +177,7 @@ function Contact() {
           </div>
 
           <div className="rounded-lg border border-border bg-card p-6">
-            <h3 className="text-sm font-semibold">Business hours</h3>
-            <p className="mt-2 text-sm text-muted-foreground">
-              {s?.hours ?? "Contact us for current hours."}
-            </p>
-            <h3 className="mt-6 text-sm font-semibold">Diagnostic fee</h3>
+            <h3 className="text-sm font-semibold">Diagnostic fee</h3>
             <p className="mt-2 text-sm text-muted-foreground">
               {s?.diagnostic_fee ?? "$95, waived when the repair is completed."}
             </p>

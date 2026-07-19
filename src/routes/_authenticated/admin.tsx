@@ -6,10 +6,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { checkIsAdmin } from "@/lib/admin.functions";
 
 const NAV: Array<{
-  to: "/admin/services" | "/admin/projects" | "/admin/settings";
+  to: "/admin/leads" | "/admin/services" | "/admin/projects" | "/admin/settings";
   label: string;
   exact?: boolean;
 }> = [
+  { to: "/admin/leads", label: "Leads" },
   { to: "/admin/services", label: "Services" },
   { to: "/admin/projects", label: "Projects" },
   { to: "/admin/settings", label: "Settings" },

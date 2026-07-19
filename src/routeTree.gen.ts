@@ -42,6 +42,7 @@ import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
 import { Route as AuthenticatedAdminServicesRouteImport } from './routes/_authenticated/admin.services'
 import { Route as AuthenticatedAdminProjectsRouteImport } from './routes/_authenticated/admin.projects'
+import { Route as AuthenticatedAdminLeadsRouteImport } from './routes/_authenticated/admin.leads'
 
 const WolfApplianceRepairRoute = WolfApplianceRepairRouteImport.update({
   id: '/wolf-appliance-repair',
@@ -213,6 +214,11 @@ const AuthenticatedAdminProjectsRoute =
     path: '/projects',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminLeadsRoute = AuthenticatedAdminLeadsRouteImport.update({
+  id: '/leads',
+  path: '/leads',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -243,6 +249,7 @@ export interface FileRoutesByFullPath {
   '/post/$slug': typeof PostSlugRoute
   '/projects/gallery': typeof ProjectsGalleryRoute
   '/services/$slug': typeof ServicesSlugRoute
+  '/admin/leads': typeof AuthenticatedAdminLeadsRoute
   '/admin/projects': typeof AuthenticatedAdminProjectsRoute
   '/admin/services': typeof AuthenticatedAdminServicesRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
@@ -276,6 +283,7 @@ export interface FileRoutesByTo {
   '/post/$slug': typeof PostSlugRoute
   '/projects/gallery': typeof ProjectsGalleryRoute
   '/services/$slug': typeof ServicesSlugRoute
+  '/admin/leads': typeof AuthenticatedAdminLeadsRoute
   '/admin/projects': typeof AuthenticatedAdminProjectsRoute
   '/admin/services': typeof AuthenticatedAdminServicesRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
@@ -312,6 +320,7 @@ export interface FileRoutesById {
   '/post/$slug': typeof PostSlugRoute
   '/projects_/gallery': typeof ProjectsGalleryRoute
   '/services_/$slug': typeof ServicesSlugRoute
+  '/_authenticated/admin/leads': typeof AuthenticatedAdminLeadsRoute
   '/_authenticated/admin/projects': typeof AuthenticatedAdminProjectsRoute
   '/_authenticated/admin/services': typeof AuthenticatedAdminServicesRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
@@ -348,6 +357,7 @@ export interface FileRouteTypes {
     | '/post/$slug'
     | '/projects/gallery'
     | '/services/$slug'
+    | '/admin/leads'
     | '/admin/projects'
     | '/admin/services'
     | '/admin/settings'
@@ -381,6 +391,7 @@ export interface FileRouteTypes {
     | '/post/$slug'
     | '/projects/gallery'
     | '/services/$slug'
+    | '/admin/leads'
     | '/admin/projects'
     | '/admin/services'
     | '/admin/settings'
@@ -416,6 +427,7 @@ export interface FileRouteTypes {
     | '/post/$slug'
     | '/projects_/gallery'
     | '/services_/$slug'
+    | '/_authenticated/admin/leads'
     | '/_authenticated/admin/projects'
     | '/_authenticated/admin/services'
     | '/_authenticated/admin/settings'
@@ -686,10 +698,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminProjectsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/leads': {
+      id: '/_authenticated/admin/leads'
+      path: '/leads'
+      fullPath: '/admin/leads'
+      preLoaderRoute: typeof AuthenticatedAdminLeadsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
   }
 }
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminLeadsRoute: typeof AuthenticatedAdminLeadsRoute
   AuthenticatedAdminProjectsRoute: typeof AuthenticatedAdminProjectsRoute
   AuthenticatedAdminServicesRoute: typeof AuthenticatedAdminServicesRoute
   AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
@@ -697,6 +717,7 @@ interface AuthenticatedAdminRouteChildren {
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminLeadsRoute: AuthenticatedAdminLeadsRoute,
   AuthenticatedAdminProjectsRoute: AuthenticatedAdminProjectsRoute,
   AuthenticatedAdminServicesRoute: AuthenticatedAdminServicesRoute,
   AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,

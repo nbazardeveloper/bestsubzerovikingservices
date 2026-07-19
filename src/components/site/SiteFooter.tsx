@@ -56,7 +56,7 @@ export function SiteFooter() {
 
   return (
     <footer className="mt-24 border-t border-border bg-muted/40">
-      <div className="mx-auto grid max-w-7xl gap-x-8 gap-y-12 px-4 py-14 sm:grid-cols-2 md:px-8 lg:grid-cols-[1.4fr_1fr_1fr_0.7fr]">
+      <div className="mx-auto grid max-w-7xl gap-x-8 gap-y-12 px-4 py-14 sm:grid-cols-2 md:px-8 lg:grid-cols-[1.4fr_1fr_1fr]">
         <div className="min-w-0">
           <div className="flex items-center gap-3">
             <img
@@ -70,7 +70,7 @@ export function SiteFooter() {
           </div>
           <p className="mt-4 max-w-xs text-sm text-muted-foreground">
             Honest, expert repair for Sub-Zero, Viking, Wolf and other premium residential kitchen
-            appliances, serving NY &amp; NJ.
+            appliances, serving NY &amp; NJ. Residential appliance repair only.
           </p>
           {s?.social_links?.google_reviews || s?.social_links?.yelp ? (
             <div className="mt-5 flex flex-wrap gap-2">
@@ -118,7 +118,7 @@ export function SiteFooter() {
                     className="flex min-w-0 items-center gap-2 transition-colors hover:text-foreground"
                   >
                     <Mail className="h-4 w-4 flex-shrink-0" aria-hidden />
-                    <span className="min-w-0 break-words">{s.email}</span>
+                    <span className="min-w-0 truncate text-xs">{s.email}</span>
                   </a>
                 </li>
                 {s.hours ? <li className="pt-1 text-xs leading-relaxed">{s.hours}</li> : null}
@@ -128,6 +128,43 @@ export function SiteFooter() {
               24/7 online scheduling — service 7 days a week
             </li>
           </ul>
+
+          <h3 className="mt-6 text-sm font-semibold tracking-wide text-foreground">Follow us</h3>
+          <div className="mt-4 flex items-center gap-4 text-muted-foreground">
+            {s?.social_links?.instagram ? (
+              <a
+                href={s.social_links.instagram}
+                target="_blank"
+                rel="noreferrer noopener"
+                aria-label="Instagram"
+                className="transition-colors hover:text-accent"
+              >
+                <Instagram className="h-[18px] w-[18px]" />
+              </a>
+            ) : null}
+            {s?.social_links?.facebook ? (
+              <a
+                href={s.social_links.facebook}
+                target="_blank"
+                rel="noreferrer noopener"
+                aria-label="Facebook"
+                className="transition-colors hover:text-accent"
+              >
+                <Facebook className="h-[18px] w-[18px]" />
+              </a>
+            ) : null}
+            {s?.social_links?.youtube ? (
+              <a
+                href={s.social_links.youtube}
+                target="_blank"
+                rel="noreferrer noopener"
+                aria-label="YouTube"
+                className="transition-colors hover:text-accent"
+              >
+                <Youtube className="h-[18px] w-[18px]" />
+              </a>
+            ) : null}
+          </div>
         </div>
 
         <div className="min-w-0 lg:hidden">
@@ -174,45 +211,6 @@ export function SiteFooter() {
             </li>
           </ul>
         </div>
-
-        <div className="min-w-0">
-          <h3 className="text-sm font-semibold tracking-wide text-foreground">Follow us</h3>
-          <div className="mt-4 flex items-center gap-4 text-muted-foreground">
-            {s?.social_links?.instagram ? (
-              <a
-                href={s.social_links.instagram}
-                target="_blank"
-                rel="noreferrer noopener"
-                aria-label="Instagram"
-                className="transition-colors hover:text-accent"
-              >
-                <Instagram className="h-[18px] w-[18px]" />
-              </a>
-            ) : null}
-            {s?.social_links?.facebook ? (
-              <a
-                href={s.social_links.facebook}
-                target="_blank"
-                rel="noreferrer noopener"
-                aria-label="Facebook"
-                className="transition-colors hover:text-accent"
-              >
-                <Facebook className="h-[18px] w-[18px]" />
-              </a>
-            ) : null}
-            {s?.social_links?.youtube ? (
-              <a
-                href={s.social_links.youtube}
-                target="_blank"
-                rel="noreferrer noopener"
-                aria-label="YouTube"
-                className="transition-colors hover:text-accent"
-              >
-                <Youtube className="h-[18px] w-[18px]" />
-              </a>
-            ) : null}
-          </div>
-        </div>
       </div>
 
       {/* Service area — its own full-width row on desktop only (the 8 areas
@@ -255,56 +253,72 @@ export function SiteFooter() {
       </div>
 
       {/* Brands we service — moved here from the homepage so it doesn't
-          compete with the hero/advantages sections for space. */}
-      <div className="border-t border-border">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-6 gap-y-2 px-4 py-5 text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground md:px-8">
-          {BRANDS.map((b, i) => (
-            <span key={b} className="flex items-center gap-6">
-              {b}
-              {i < BRANDS.length - 1 ? (
-                <span aria-hidden className="text-border">
-                  ·
-                </span>
-              ) : null}
-            </span>
-          ))}
+          compete with the hero/advantages sections for space. Animated as
+          an infinite marquee (paused on hover); the sr-only list keeps the
+          brand names readable to screen readers and search engines without
+          announcing the duplicated scroll copy. */}
+      <div className="border-t border-border bg-muted/20 py-6">
+        <span className="sr-only">Brands we service: {BRANDS.join(", ")}</span>
+        <div className="marquee-edge-fade overflow-hidden" aria-hidden="true">
+          <div className="animate-marquee flex w-max items-center">
+            {[0, 1].map((rep) => (
+              <div key={rep} className="flex items-center">
+                {BRANDS.map((b) => (
+                  <span key={`${rep}-${b}`} className="flex items-center gap-3 px-6">
+                    <span className="font-display text-lg font-semibold tracking-tight text-foreground whitespace-nowrap md:text-xl">
+                      {b}
+                    </span>
+                    <span
+                      aria-hidden
+                      className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-accent"
+                    />
+                  </span>
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
       <div className="border-t border-border">
-        <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-2 px-4 py-5 text-xs text-muted-foreground md:flex-row md:items-center md:px-8">
-          <span>© {year} Best Sub-Zero &amp; Viking Service. All rights reserved.</span>
-          <span>Residential appliance repair only.</span>
+        <div className="mx-auto px-4 py-5 text-xs text-muted-foreground md:px-8">
+          <span>
+            © {year} Best Sub-Zero &amp; Viking Service. All rights reserved. Independent Sub-Zero
+            Appliance Care | Not Affiliated with SUB-ZERO GROUP INC.
+          </span>
         </div>
       </div>
 
-      {/* Trademark/affiliation disclaimer — required since we service these
-          brands but have no corporate affiliation with them. */}
+      {/* Small print: trademark/affiliation disclaimer, plus the required
+          attribution for free-tier Noun Project icons used across the "Why
+          choose us" and service-category icon sets (Noun Project's CC BY
+          license requires naming each icon's creator — not just linking the
+          site — so the names have to stay, but this is trimmed to a plain
+          list instead of a full sentence to take up less room). Combined
+          into one bordered block so it reads as one compact footnote. */}
       <div className="border-t border-border bg-muted/30">
-        <div className="mx-auto max-w-7xl px-4 py-3 text-[11px] leading-relaxed text-muted-foreground md:px-8">
-          Best Sub-Zero &amp; Viking Service is an independent service company. We specialize in the
-          repair and maintenance of Sub-Zero, Viking and Wolf appliances, but we are not the
-          manufacturer, an authorized dealer, or a factory-affiliated service center for these
-          brands. All brand names, trademarks and logos are the property of their respective owners.
-        </div>
-      </div>
-
-      {/* Required attribution for free-tier Noun Project icons used across
-          the "Why choose us" and service-category icon sets. */}
-      <div className="border-t border-border bg-muted/30">
-        <div className="mx-auto max-w-7xl px-4 py-3 text-[11px] leading-relaxed text-muted-foreground md:px-8">
-          Icons by Puspito, metami septiana, miftahul huda, Graphixs_Art, Satria Arnata, Adi Waluyo
-          Noto Carito, ATOM, Adnan Thariq, Larea, ic2icon, Cahya Kurniawan, Template, rendicon,
-          Yosua Bungaran and wyasa design from{" "}
-          <a
-            href="https://thenounproject.com"
-            target="_blank"
-            rel="noreferrer noopener"
-            className="underline hover:text-foreground"
-          >
-            the Noun Project
-          </a>
-          .
+        <div className="mx-auto max-w-7xl space-y-1.5 px-4 py-3 text-[11px] leading-snug text-muted-foreground md:px-8">
+          <p>
+            Best Sub-Zero &amp; Viking Service is an independent service company. We specialize in
+            the repair and maintenance of Sub-Zero, Viking and Wolf appliances, but we are not the
+            manufacturer, an authorized dealer, or a factory-affiliated service center for these
+            brands. All brand names, trademarks and logos are the property of their respective
+            owners.
+          </p>
+          <p>
+            Icons: Puspito, metami septiana, miftahul huda, Graphixs_Art, Satria Arnata, Adi Waluyo
+            Noto Carito, ATOM, Adnan Thariq, Larea, ic2icon, Cahya Kurniawan, Template, rendicon,
+            Yosua Bungaran, wyasa design —{" "}
+            <a
+              href="https://thenounproject.com"
+              target="_blank"
+              rel="noreferrer noopener"
+              className="underline hover:text-foreground"
+            >
+              Noun Project
+            </a>
+            .
+          </p>
         </div>
       </div>
     </footer>

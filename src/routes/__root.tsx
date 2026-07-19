@@ -14,6 +14,7 @@ import { CalendarClock } from "lucide-react";
 import appCss from "../styles.css?url";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
+import { ChatWidget } from "@/components/site/ChatWidget";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { getSiteSettings } from "@/lib/site.functions";
@@ -219,6 +220,7 @@ function RootComponent() {
           </Link>
         </div>
       )}
+      {!hideChrome && <ChatWidget />}
       <Suspense fallback={null}>
         <Toaster position="top-right" richColors closeButton />
       </Suspense>

@@ -294,4 +294,34 @@
   .animate-route-progress {
     animation: route-progress-sweep 1.1s ease-in-out infinite;
   }
+
+  /* Brand-strip marquee (see SiteFooter). The track renders the brand list
+     twice back-to-back and scrolls exactly 50% of its own width — since
+     both halves are identical, the loop point is invisible. Paused on
+     hover so it's readable on demand, and disabled entirely for
+     prefers-reduced-motion (the content is also duplicated in an sr-only
+     list, so nothing is lost when the animation is off). */
+  @keyframes marquee-scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  .animate-marquee {
+    animation: marquee-scroll 28s linear infinite;
+  }
+  .animate-marquee:hover {
+    animation-play-state: paused;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .animate-marquee {
+      animation: none;
+    }
+  }
+  .marquee-edge-fade {
+    mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
+  }
 }

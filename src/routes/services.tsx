@@ -147,7 +147,7 @@ function ServicesPage() {
                 </div>
                 <div className="flex flex-1 flex-col p-6 pb-8 pt-14">
                   <div className="flex flex-wrap gap-1">
-                    {s.brands.slice(0, 3).map((b) => (
+                    {s.brands.map((b) => (
                       <Badge key={b} variant="secondary" className="font-normal">
                         {b}
                       </Badge>
