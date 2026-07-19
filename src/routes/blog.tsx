@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { absUrl } from "@/lib/seo";
+import { absUrl, DEFAULT_OG_IMAGE } from "@/lib/seo";
 import { useQuery } from "@tanstack/react-query";
 import { listBlogPosts } from "@/lib/site.functions";
 
@@ -15,6 +15,7 @@ export const Route = createFileRoute("/blog")({
       { property: "og:title", content: "Appliance Repair Blog" },
       { property: "og:description", content: "Sub-Zero, Viking and Wolf repair guides and tips." },
       { property: "og:url", content: absUrl("/blog") },
+      { property: "og:image", content: DEFAULT_OG_IMAGE },
     ],
     links: [{ rel: "canonical", href: absUrl("/blog") }],
   }),

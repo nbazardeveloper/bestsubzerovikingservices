@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { absUrl } from "@/lib/seo";
+import { absUrl, DEFAULT_OG_IMAGE } from "@/lib/seo";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { MapPin, Images } from "lucide-react";
@@ -26,6 +26,7 @@ export const Route = createFileRoute("/projects")({
         content: "Sub-Zero, Viking, Wolf and Thermador projects we've completed.",
       },
       { property: "og:url", content: absUrl("/projects") },
+      { property: "og:image", content: DEFAULT_OG_IMAGE },
     ],
     links: [{ rel: "canonical", href: absUrl("/projects") }],
   }),

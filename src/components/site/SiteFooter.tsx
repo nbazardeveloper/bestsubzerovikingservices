@@ -281,7 +281,7 @@ export function SiteFooter() {
       </div>
 
       <div className="border-t border-border">
-        <div className="mx-auto px-4 py-5 text-xs text-muted-foreground md:px-8">
+        <div className="mx-auto max-w-7xl px-4 py-5 text-xs text-muted-foreground md:px-8">
           <span>
             © {year} Best Sub-Zero &amp; Viking Service. All rights reserved. Independent Sub-Zero
             Appliance Care | Not Affiliated with SUB-ZERO GROUP INC.

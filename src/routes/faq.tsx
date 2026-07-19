@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { absUrl } from "@/lib/seo";
+import { absUrl, DEFAULT_OG_IMAGE } from "@/lib/seo";
 import {
   Accordion,
   AccordionContent,
@@ -66,6 +66,7 @@ export const Route = createFileRoute("/faq")({
       { property: "og:title", content: "Frequently Asked Questions" },
       { property: "og:description", content: "Answers to common appliance-repair questions." },
       { property: "og:url", content: absUrl("/faq") },
+      { property: "og:image", content: DEFAULT_OG_IMAGE },
     ],
     links: [{ rel: "canonical", href: absUrl("/faq") }],
     scripts: [

@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { absUrl } from "@/lib/seo";
+import { absUrl, DEFAULT_OG_IMAGE } from "@/lib/seo";
 import { useQuery } from "@tanstack/react-query";
 import { Phone, Mail, MessageCircle, MapPin, CalendarClock } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -32,6 +32,7 @@ export const Route = createFileRoute("/contact")({
       { property: "og:title", content: "Contact Best Sub-Zero & Viking Service" },
       { property: "og:description", content: "Get in touch to schedule a diagnostic or repair." },
       { property: "og:url", content: absUrl("/contact") },
+      { property: "og:image", content: DEFAULT_OG_IMAGE },
     ],
     links: [{ rel: "canonical", href: absUrl("/contact") }],
     scripts: [

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ImagePlaceholder } from "@/components/site/ImagePlaceholder";
 import { getServiceBySlug, listServices, getSiteSettings } from "@/lib/site.functions";
-import { buildTitle, buildMetaDescription, absUrl } from "@/lib/seo";
+import { buildTitle, buildMetaDescription, absUrl, DEFAULT_OG_IMAGE } from "@/lib/seo";
 
 const AREAS = [
   "Staten Island",
@@ -53,6 +53,7 @@ export const Route = createFileRoute("/services_/$slug")({
         { property: "og:description", content: description },
         { property: "og:url", content: absUrl(`/services/${s.slug}`) },
         { property: "og:type", content: "article" },
+        { property: "og:image", content: s.image_url ?? DEFAULT_OG_IMAGE },
       ],
       links: [{ rel: "canonical", href: absUrl(`/services/${s.slug}`) }],
       scripts: [

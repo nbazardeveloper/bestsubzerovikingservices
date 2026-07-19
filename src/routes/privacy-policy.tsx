@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { absUrl } from "@/lib/seo";
+import { absUrl, DEFAULT_OG_IMAGE } from "@/lib/seo";
 
 export const Route = createFileRoute("/privacy-policy")({
   head: () => ({
@@ -13,6 +13,7 @@ export const Route = createFileRoute("/privacy-policy")({
       { property: "og:title", content: "Privacy Policy" },
       { property: "og:description", content: "Our privacy policy." },
       { property: "og:url", content: absUrl("/privacy-policy") },
+      { property: "og:image", content: DEFAULT_OG_IMAGE },
     ],
     links: [{ rel: "canonical", href: absUrl("/privacy-policy") }],
   }),

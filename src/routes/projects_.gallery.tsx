@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { absUrl } from "@/lib/seo";
+import { absUrl, DEFAULT_OG_IMAGE } from "@/lib/seo";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { ArrowLeft } from "lucide-react";
@@ -15,6 +15,13 @@ export const Route = createFileRoute("/projects_/gallery")({
         content:
           "Photos from appliance repair projects completed across Staten Island, Brooklyn, Long Island near Queens and New Jersey.",
       },
+      { property: "og:title", content: "Project Photo Gallery" },
+      {
+        property: "og:description",
+        content: "Photos from appliance repair projects we've completed.",
+      },
+      { property: "og:url", content: absUrl("/projects/gallery") },
+      { property: "og:image", content: DEFAULT_OG_IMAGE },
     ],
     links: [{ rel: "canonical", href: absUrl("/projects/gallery") }],
   }),

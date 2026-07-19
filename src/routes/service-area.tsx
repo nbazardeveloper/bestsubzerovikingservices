@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { absUrl } from "@/lib/seo";
+import { absUrl, DEFAULT_OG_IMAGE } from "@/lib/seo";
 import { MapPin } from "lucide-react";
 
 const AREAS = [
@@ -54,6 +54,7 @@ export const Route = createFileRoute("/service-area")({
       { property: "og:title", content: "Service Area" },
       { property: "og:description", content: "Where we repair premium kitchen appliances." },
       { property: "og:url", content: absUrl("/service-area") },
+      { property: "og:image", content: DEFAULT_OG_IMAGE },
     ],
     links: [{ rel: "canonical", href: absUrl("/service-area") }],
   }),

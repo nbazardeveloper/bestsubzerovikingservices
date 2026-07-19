@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { adminListProjects, adminSaveProject, adminDeleteProject } from "@/lib/admin.functions";
 import { supabase } from "@/integrations/supabase/client";
+import type { Tables } from "@/integrations/supabase/types";
 
 export const Route = createFileRoute("/_authenticated/admin/projects")({
   component: ProjectsAdmin,
@@ -44,7 +45,7 @@ function ProjectsAdmin() {
   const [form, setForm] = useState(EMPTY);
   const [saving, setSaving] = useState(false);
 
-  function edit(p: any) {
+  function edit(p: Tables<"projects">) {
     setForm({
       id: p.id,
       slug: p.slug,

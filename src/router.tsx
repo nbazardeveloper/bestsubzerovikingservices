@@ -7,16 +7,26 @@ import { routeTree } from "./routeTree.gen";
 export const getRouter = () => {
   // Default staleTime of 0 means every useQuery/ensureQueryData call is
   // treated as instantly stale, so revisiting a page you were just on (e.g.
-  // Projects -> Services -> Projects -> Services) re-triggers a real network
-  // round trip to Supabase every single time instead of reusing what was
-  // just fetched. With no loading skeleton for that window, the page content
+  // Home -> Services -> Projects -> Home) re-triggers a real network round
+  // trip to Supabase every single time instead of reusing what was just
+  // fetched. With no loading skeleton for that window, the page content
   // area would briefly go blank right under the header while it waited —
-  // the "gap" glitch. A minute of freshness is plenty for mostly-static
-  // marketing content and completely removes the redundant refetch.
+  // the "gap" glitch (reported as a flash/half-loaded image right between
+  // the header and the hero).
+  //
+  // This was previously set to 60s, which sounds like plenty but isn't in
+  // practice: browsing Services or Projects for even a minute before
+  // clicking back to Home is completely normal, and that alone was enough
+  // to cross the 60s line and re-trigger the glitch. SiteHeader/SiteFooter/
+  // ReviewsBar already used a 5-minute staleTime for the exact same
+  // site-settings query — this brings the route loaders (index/services/
+  // projects/etc, which didn't specify their own staleTime and so fell back
+  // to this global default) up to that same 5 minutes, since none of this
+  // data changes minute-to-minute anyway.
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: 60 * 1000,
+        staleTime: 5 * 60 * 1000,
         gcTime: 10 * 60 * 1000,
       },
     },
@@ -27,8 +37,8 @@ export const getRouter = () => {
     context: { queryClient },
     scrollRestoration: true,
     defaultPreload: "intent",
-    defaultPreloadStaleTime: 60 * 1000,
-    defaultStaleTime: 60 * 1000,
+    defaultPreloadStaleTime: 5 * 60 * 1000,
+    defaultStaleTime: 5 * 60 * 1000,
     defaultGcTime: 10 * 60 * 1000,
     // Safety net for whenever a transition genuinely does need to hit the
     // network (first visit to a route, cache expired, slow connection): a

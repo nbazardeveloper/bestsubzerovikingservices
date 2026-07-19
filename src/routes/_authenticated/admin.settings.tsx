@@ -6,17 +6,29 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { getSiteSettings } from "@/lib/site.functions";
+import { getSiteSettings, type SiteSettings } from "@/lib/site.functions";
 import { adminUpdateSettings } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/settings")({
   component: SettingsAdmin,
 });
 
+// Same shape as SiteSettings, but the numeric review fields are edited as
+// text (so an input can be temporarily empty while typing) instead of number.
+type SettingsForm = Omit<
+  SiteSettings,
+  "review_count" | "review_rating" | "yelp_review_count" | "yelp_review_rating"
+> & {
+  review_count: number | string | null;
+  review_rating: number | string | null;
+  yelp_review_count: number | string | null;
+  yelp_review_rating: number | string | null;
+};
+
 function SettingsAdmin() {
   const qc = useQueryClient();
   const { data } = useQuery({ queryKey: ["site-settings"], queryFn: () => getSiteSettings() });
-  const [form, setForm] = useState<any>(null);
+  const [form, setForm] = useState<SettingsForm | null>(null);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -25,6 +37,7 @@ function SettingsAdmin() {
   if (!form) return <p className="text-sm text-muted-foreground">Loading…</p>;
 
   async function save() {
+    if (!form) return;
     setSaving(true);
     try {
       await adminUpdateSettings({
@@ -51,9 +64,12 @@ function SettingsAdmin() {
     }
   }
 
-  const S = (k: string, v: any) => setForm({ ...form, [k]: v });
-  const L = (k: string, v: string) =>
-    setForm({ ...form, social_links: { ...form.social_links, [k]: v } });
+  function S<K extends keyof SettingsForm>(k: K, v: SettingsForm[K]) {
+    setForm((f) => (f ? { ...f, [k]: v } : f));
+  }
+  function L(k: string, v: string) {
+    setForm((f) => (f ? { ...f, social_links: { ...f.social_links, [k]: v } } : f));
+  }
 
   return (
     <div className="max-w-2xl">

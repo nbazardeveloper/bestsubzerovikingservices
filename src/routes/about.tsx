@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { absUrl } from "@/lib/seo";
+import { absUrl, DEFAULT_OG_IMAGE } from "@/lib/seo";
 import { CheckCircle2 } from "lucide-react";
 import { ImagePlaceholder } from "@/components/site/ImagePlaceholder";
 
@@ -48,6 +48,7 @@ export const Route = createFileRoute("/about")({
         content: "13 years of premium appliance repair across NY & NJ.",
       },
       { property: "og:url", content: absUrl("/about") },
+      { property: "og:image", content: DEFAULT_OG_IMAGE },
     ],
     links: [{ rel: "canonical", href: absUrl("/about") }],
   }),

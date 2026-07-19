@@ -71,50 +71,8 @@ const FAQ_PREVIEW = [
 ];
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Best Sub-Zero & Viking Service | NY & NJ Appliance Repair" },
-      {
-        name: "description",
-        content:
-          "Premium repair for Sub-Zero, Viking, Wolf and other high-end kitchen appliances across Staten Island, Brooklyn, Queens, Long Island near Queens and New Jersey. Call today.",
-      },
-      { property: "og:title", content: "Best Sub-Zero & Viking Service" },
-      {
-        property: "og:description",
-        content: "Honest, expert repair of premium residential kitchen appliances across NY & NJ.",
-      },
-      { property: "og:url", content: absUrl("/") },
-      { property: "og:image", content: "https://bestsubzerovikingservices.com/images/hero.webp" },
-    ],
-    links: [{ rel: "canonical", href: absUrl("/") }],
-    scripts: [
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "LocalBusiness",
-          name: "Best Sub-Zero & Viking Service",
-          telephone: "+1-888-702-8565",
-          email: "info@bestsubzerovikingservices.com",
-          image: "https://bestsubzerovikingservices.com/images/hero.webp",
-          priceRange: "$$",
-          areaServed: [
-            "Staten Island",
-            "Brooklyn",
-            "Queens",
-            "Long Island (near Queens)",
-            "Great Neck",
-            "Jersey City",
-            "Elizabeth NJ",
-            "North & Central New Jersey",
-          ],
-        }),
-      },
-    ],
-  }),
-  loader: ({ context }) =>
-    Promise.all([
+  loader: async ({ context }) => {
+    const [, , settings] = await Promise.all([
       context.queryClient.ensureQueryData({
         queryKey: ["featured-services"],
         queryFn: () => listFeaturedServices(),
@@ -127,7 +85,76 @@ export const Route = createFileRoute("/")({
         queryKey: ["site-settings"],
         queryFn: () => getSiteSettings(),
       }),
-    ]),
+    ]);
+    return { settings };
+  },
+  head: ({ loaderData }) => {
+    // Star-rating rich snippets in Google search results require an
+    // aggregateRating on the LocalBusiness entity — we already collect
+    // review_count/review_rating in site settings (shown on-site via
+    // ReviewsBar) but weren't surfacing them to search engines at all.
+    // Only include it once both values are actually set, so an empty/unset
+    // admin field never emits a bogus "0 reviews" rating.
+    const settings = loaderData?.settings;
+    const aggregateRating =
+      settings?.review_rating && settings?.review_count
+        ? {
+            aggregateRating: {
+              "@type": "AggregateRating",
+              ratingValue: settings.review_rating,
+              reviewCount: settings.review_count,
+            },
+          }
+        : {};
+
+    return {
+      meta: [
+        { title: "Best Sub-Zero & Viking Service | NY & NJ Appliance Repair" },
+        {
+          name: "description",
+          content:
+            "Premium repair for Sub-Zero, Viking, Wolf and other high-end kitchen appliances across Staten Island, Brooklyn, Queens, Long Island near Queens and New Jersey. Call today.",
+        },
+        { property: "og:title", content: "Best Sub-Zero & Viking Service" },
+        {
+          property: "og:description",
+          content:
+            "Honest, expert repair of premium residential kitchen appliances across NY & NJ.",
+        },
+        { property: "og:url", content: absUrl("/") },
+        {
+          property: "og:image",
+          content: "https://bestsubzerovikingservices.com/images/hero.webp",
+        },
+      ],
+      links: [{ rel: "canonical", href: absUrl("/") }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "LocalBusiness",
+            name: "Best Sub-Zero & Viking Service",
+            telephone: "+1-888-702-8565",
+            email: "info@bestsubzerovikingservices.com",
+            image: "https://bestsubzerovikingservices.com/images/hero.webp",
+            priceRange: "$$",
+            areaServed: [
+              "Staten Island",
+              "Brooklyn",
+              "Queens",
+              "Long Island (near Queens)",
+              "Great Neck",
+              "Jersey City",
+              "Elizabeth NJ",
+              "North & Central New Jersey",
+            ],
+            ...aggregateRating,
+          }),
+        },
+      ],
+    };
+  },
   component: Home,
 });
 

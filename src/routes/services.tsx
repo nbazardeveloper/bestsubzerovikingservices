@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { absUrl } from "@/lib/seo";
+import { absUrl, DEFAULT_OG_IMAGE } from "@/lib/seo";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
@@ -21,6 +21,7 @@ export const Route = createFileRoute("/services")({
       { property: "og:title", content: "Premium Appliance Repair Services" },
       { property: "og:description", content: "All services we offer across NY & NJ." },
       { property: "og:url", content: absUrl("/services") },
+      { property: "og:image", content: DEFAULT_OG_IMAGE },
     ],
     links: [{ rel: "canonical", href: absUrl("/services") }],
   }),

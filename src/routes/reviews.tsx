@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { absUrl } from "@/lib/seo";
+import { absUrl, DEFAULT_OG_IMAGE } from "@/lib/seo";
 import { useQuery } from "@tanstack/react-query";
 import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,7 @@ export const Route = createFileRoute("/reviews")({
       { property: "og:title", content: "Customer Reviews" },
       { property: "og:description", content: "Feedback from NY & NJ customers." },
       { property: "og:url", content: absUrl("/reviews") },
+      { property: "og:image", content: DEFAULT_OG_IMAGE },
     ],
     links: [{ rel: "canonical", href: absUrl("/reviews") }],
   }),

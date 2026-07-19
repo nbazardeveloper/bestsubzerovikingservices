@@ -15,6 +15,15 @@ export function absUrl(path: string): string {
   return `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
+/**
+ * Fallback `og:image` for pages that don't have their own hero/photo (About,
+ * Contact, FAQ, Privacy Policy, etc). Without an og:image, links shared on
+ * Facebook/LinkedIn/iMessage show no preview image at all and Twitter/X's
+ * "summary_large_image" card (set site-wide in __root.tsx) fails to render
+ * — so every page needs at least this generic one.
+ */
+export const DEFAULT_OG_IMAGE = absUrl("/images/hero.webp");
+
 const TITLE_SUFFIXES = [
   ` | Sub-Zero & Viking Repair Experts in NY & NJ`,
   ` | Sub-Zero & Viking Repair Experts`,
