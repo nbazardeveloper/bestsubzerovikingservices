@@ -1,7 +1,6 @@
 import { QueryClient } from "@tanstack/react-query";
 import { createRouter } from "@tanstack/react-router";
 import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
-import { RouteProgressBar } from "@/components/site/RouteProgressBar";
 import { routeTree } from "./routeTree.gen";
 
 export const getRouter = () => {
@@ -40,15 +39,21 @@ export const getRouter = () => {
     defaultPreloadStaleTime: 5 * 60 * 1000,
     defaultStaleTime: 5 * 60 * 1000,
     defaultGcTime: 10 * 60 * 1000,
-    // Safety net for whenever a transition genuinely does need to hit the
-    // network (first visit to a route, cache expired, slow connection): a
-    // fixed progress sweep instead of a blank gap under the header. Kept
-    // snappy (300ms) so it still shows up for the exact case that prompted
-    // this — Supabase round trips that briefly stall a revisit — without
-    // flashing on every instant, cached transition.
-    defaultPendingComponent: RouteProgressBar,
-    defaultPendingMs: 300,
-    defaultPendingMinMs: 300,
+    // Deliberately no defaultPendingComponent/defaultPendingMs here. TanStack
+    // Router only swaps the outlet to a pending/loading state if a
+    // pendingComponent is actually configured (see load-matches.js: the
+    // pendingMs timer that shows it is gated on
+    // `route.options.pendingComponent ?? defaultPendingComponent` being
+    // truthy). With neither set, a slow transition just keeps the current
+    // page fully visible and swaps straight to the new page once its data is
+    // ready — no intermediate blank/placeholder state to flash, ever. We'd
+    // previously added a pendingComponent (a progress-bar sweep that
+    // replaced the outlet with an empty min-h-[70vh] block) specifically to
+    // paper over slow Supabase round trips, but that swap-to-blank *was*
+    // the "gap" glitch users kept reporting between the header and page
+    // content — removing it outright is the actual fix, not a fancier
+    // loading indicator. The 5-minute staleTime above plus `intent` preload
+    // already keep genuine network round trips rare.
   });
 
   // Without this, the client's QueryClient starts with an empty cache on
