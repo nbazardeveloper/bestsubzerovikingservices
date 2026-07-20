@@ -1,5 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { absUrl, DEFAULT_OG_IMAGE } from "@/lib/seo";
+
+const SORO_EMBED_SRC = "https://app.trysoro.com/api/embed/dde6d064-824d-4996-93f6-494a8776867f";
 
 // The blog is published through Soro (trysoro.com) — new articles are
 // written and auto-published by Soro directly into this embed, not through
@@ -28,6 +31,28 @@ export const Route = createFileRoute("/blog")({
 });
 
 function BlogIndex() {
+  // The Soro embed script mutates the #soro-blog div directly (it injects
+  // its own article list into it). Rendering <script src=...> straight in
+  // JSX put it in the server-rendered HTML, so on a slow-ish hydration it
+  // could run and populate that div *before* React finished hydrating —
+  // React then sees a div with unexpected children it didn't put there
+  // itself, treats it as a hydration mismatch (React error #418), and wipes
+  // the mismatched subtree back to empty. That's why the articles rendered
+  // sometimes and vanished other times instead of failing consistently.
+  //
+  // Loading the script from an effect instead guarantees it never touches
+  // the DOM until after React has fully mounted/hydrated this page, so
+  // there's no window for a mismatch. Guard against adding it twice (e.g.
+  // React StrictMode's double-invoke in dev, or remounting via client-side
+  // nav back to /blog) by checking for an existing tag with the same src.
+  useEffect(() => {
+    if (document.querySelector(`script[src="${SORO_EMBED_SRC}"]`)) return;
+    const script = document.createElement("script");
+    script.src = SORO_EMBED_SRC;
+    script.defer = true;
+    document.body.appendChild(script);
+  }, []);
+
   return (
     <div>
       <section className="border-b border-border">
@@ -41,11 +66,7 @@ function BlogIndex() {
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-10 md:px-8">
-        <div id="soro-blog" />
-        <script
-          src="https://app.trysoro.com/api/embed/dde6d064-824d-4996-93f6-494a8776867f"
-          defer
-        />
+        <div id="soro-blog" suppressHydrationWarning />
       </section>
     </div>
   );
