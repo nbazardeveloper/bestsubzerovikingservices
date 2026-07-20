@@ -56,6 +56,28 @@ export const getRouter = () => {
     // already keep genuine network round trips rare.
   });
 
+  // The bug behind the "random text/image flashing under the header"
+  // report: TanStack Router only resets scroll position once the *new*
+  // route's component actually mounts (see react-router's OnRendered ->
+  // scroll-restoration.js). Since removing the pendingComponent above means
+  // the *old* route stays fully rendered on screen for as long as the new
+  // route's loader takes, the old page keeps whatever scroll position it
+  // was at that whole time. If you were scrolled halfway down /contact (say,
+  // right to the "Trouble loading the scheduler above? Open it in a new
+  // tab." line) and clicked "Home", that unrelated line of /contact — not
+  // the new page and not a blank box — is what sat under the sticky header
+  // until Home's data resolved and the scroll finally jumped to 0. Different
+  // scroll depths on different pages is exactly why it looked "random."
+  // Fixing this means scrolling to top the instant a navigation to a
+  // different path *starts*, instead of waiting for it to finish, so the
+  // old page is already showing its own top (not some arbitrary mid-scroll
+  // fragment) for the moment it's still visible during the transition.
+  if (typeof window !== "undefined") {
+    router.subscribe("onBeforeNavigate", (evt) => {
+      if (evt.pathChanged) window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    });
+  }
+
   // Without this, the client's QueryClient starts with an empty cache on
   // hydration even though SSR already resolved data via `ensureQueryData`
   // in route loaders — every query-driven section on the page (header/

@@ -1,8 +1,13 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { absUrl, DEFAULT_OG_IMAGE } from "@/lib/seo";
-import { useQuery } from "@tanstack/react-query";
-import { listBlogPosts } from "@/lib/site.functions";
 
+// The blog is published through Soro (trysoro.com) — new articles are
+// written and auto-published by Soro directly into this embed, not through
+// our own Supabase blog_posts table. That table/route (post.$slug.tsx) is
+// leftover from before this switch; nothing links to it anymore, but it's
+// left in place rather than deleted in case it's already indexed somewhere.
+// See Soro's dashboard -> Settings -> Blog Widget -> Manage for this
+// embed snippet (id/script pair are tied to this Soro account+site).
 export const Route = createFileRoute("/blog")({
   head: () => ({
     meta: [
@@ -19,20 +24,10 @@ export const Route = createFileRoute("/blog")({
     ],
     links: [{ rel: "canonical", href: absUrl("/blog") }],
   }),
-  loader: ({ context }) =>
-    context.queryClient.ensureQueryData({
-      queryKey: ["blog-posts"],
-      queryFn: () => listBlogPosts(),
-    }),
   component: BlogIndex,
 });
 
 function BlogIndex() {
-  const { data: posts = [] } = useQuery({
-    queryKey: ["blog-posts"],
-    queryFn: () => listBlogPosts(),
-  });
-
   return (
     <div>
       <section className="border-b border-border">
@@ -46,41 +41,11 @@ function BlogIndex() {
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-10 md:px-8">
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {posts.map((p) => (
-            <Link
-              key={p.slug}
-              to="/post/$slug"
-              params={{ slug: p.slug }}
-              className="group flex flex-col overflow-hidden rounded-lg border border-border bg-card transition-shadow hover:shadow-md"
-            >
-              <div className="aspect-video overflow-hidden bg-steel">
-                <img
-                  src={p.hero_image ?? undefined}
-                  alt={p.title}
-                  className="h-full w-full object-cover transition-transform group-hover:scale-105"
-                  loading="lazy"
-                />
-              </div>
-              <div className="flex flex-1 flex-col p-5">
-                <span className="text-xs uppercase tracking-widest text-muted-foreground">
-                  {new Date(p.published_at).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </span>
-                <h2 className="mt-2 text-lg font-semibold leading-snug">{p.title}</h2>
-                <p className="mt-2 flex-1 text-sm text-muted-foreground line-clamp-3">
-                  {p.meta_description}
-                </p>
-                <span className="mt-4 inline-flex items-center gap-1 text-sm text-accent">
-                  {p.title} — read more
-                </span>
-              </div>
-            </Link>
-          ))}
-        </div>
+        <div id="soro-blog" />
+        <script
+          src="https://app.trysoro.com/api/embed/dde6d064-824d-4996-93f6-494a8776867f"
+          defer
+        />
       </section>
     </div>
   );
