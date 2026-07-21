@@ -1,0 +1,35 @@
+// Non-secret runtime variables, committed to source control so every
+// Cloudflare build/deploy always has them — Nitro's cloudflare-module
+// preset merges this file into the generated .output/server/wrangler.json
+// on every `npm run build` (see readWranglerConfig/writeWranglerConfig in
+// nitro's Cloudflare preset).
+//
+// Why this file exists: env vars entered as plain "Environment Variables"
+// in the Cloudflare dashboard are NOT guaranteed to survive every rebuild —
+// a new deployment/version generated from this repo's own wrangler.json can
+// come back without them unless they're declared here. That's the
+// "keys keep disappearing after deploy" problem. Declaring the safe,
+// non-secret ones here fixes it for good, since they now ship with the
+// code itself instead of depending on dashboard state.
+//
+// SUPABASE_PUBLISHABLE_KEY is Supabase's public/anon key — safe to expose
+// (it's already shipped to every visitor's browser via the VITE_-prefixed
+// build-time copy of the same value, protected by Supabase Row Level
+// Security, not by secrecy). SITE_URL is just the public site domain.
+//
+// Do NOT add SUPABASE_SERVICE_ROLE_KEY or SORO_WEBHOOK_SECRET here — those
+// are real secrets (service role bypasses Row Level Security entirely; the
+// webhook secret authenticates inbound requests) and must never be
+// committed to git. Set those in the Cloudflare dashboard as a "Secret"
+// (encrypted), not a plaintext "Environment Variable" — Secrets are stored
+// independently of the deployed code/config and are NOT wiped by rebuilds,
+// which is exactly what plaintext dashboard vars are missing here. See
+// Settings -> Variables and Secrets on the Worker in the Cloudflare
+// dashboard, and use "Secret" as the type when adding them.
+{
+  "vars": {
+    "SUPABASE_URL": "https://iuthigfkpmrppknefnju.supabase.co",
+    "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_FasnuCcD_FsN1ufOhr2INg_DWhcl3d7",
+    "SITE_URL": "https://bestsubzerovikingservices.com"
+  }
+}
