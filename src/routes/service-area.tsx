@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { absUrl, DEFAULT_OG_IMAGE } from "@/lib/seo";
 import { MapPin } from "lucide-react";
+import { FinalCta } from "@/components/site/FinalCta";
 
 const AREAS = [
   {
@@ -98,12 +99,12 @@ function ServiceArea() {
             A real map of repairs we've completed across the New York metro and New Jersey —
             centered on Staten Island, radiating out through the service area above.
           </p>
-          <div className="mt-8 overflow-hidden rounded-lg border border-border">
+          <div className="mt-8 h-[420px] overflow-hidden rounded-lg border border-border md:h-[640px]">
             <iframe
               title="Map of completed appliance repair jobs"
               src="https://www.google.com/maps/d/embed?mid=1KRsUeTkfj5YfyxZIZ93085Ynm4D4Cz0&ll=40.63165163668629%2C-74.13427010000002&z=10"
               width="100%"
-              height="480"
+              height="100%"
               className="border-0"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
@@ -126,6 +127,8 @@ function ServiceArea() {
           </p>
         </div>
       </section>
+
+      <FinalCta />
     </div>
   );
 }

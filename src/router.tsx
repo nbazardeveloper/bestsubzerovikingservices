@@ -2,6 +2,7 @@ import { QueryClient } from "@tanstack/react-query";
 import { createRouter } from "@tanstack/react-router";
 import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
 import { routeTree } from "./routeTree.gen";
+import { RouteProgressBar } from "@/components/site/RouteProgressBar";
 
 export const getRouter = () => {
   // Default staleTime of 0 means every useQuery/ensureQueryData call is
@@ -39,21 +40,35 @@ export const getRouter = () => {
     defaultPreloadStaleTime: 5 * 60 * 1000,
     defaultStaleTime: 5 * 60 * 1000,
     defaultGcTime: 10 * 60 * 1000,
-    // Deliberately no defaultPendingComponent/defaultPendingMs here. TanStack
-    // Router only swaps the outlet to a pending/loading state if a
-    // pendingComponent is actually configured (see load-matches.js: the
-    // pendingMs timer that shows it is gated on
-    // `route.options.pendingComponent ?? defaultPendingComponent` being
-    // truthy). With neither set, a slow transition just keeps the current
-    // page fully visible and swaps straight to the new page once its data is
-    // ready — no intermediate blank/placeholder state to flash, ever. We'd
-    // previously added a pendingComponent (a progress-bar sweep that
-    // replaced the outlet with an empty min-h-[70vh] block) specifically to
-    // paper over slow Supabase round trips, but that swap-to-blank *was*
-    // the "gap" glitch users kept reporting between the header and page
-    // content — removing it outright is the actual fix, not a fancier
-    // loading indicator. The 5-minute staleTime above plus `intent` preload
-    // already keep genuine network round trips rare.
+    // defaultPendingComponent: re-added after confirming (via live testing on
+    // prod) what was actually causing the "gap glitch" / stray text under the
+    // header that kept getting reported. It's not a CSS/paint issue — it's
+    // this: click a nav link -> TanStack Router updates the URL (pushState)
+    // and the active nav-link styling immediately, but with no
+    // pendingComponent configured, the *previous* route's DOM stays exactly
+    // as-is until the new route's loader resolves. That's invisible when the
+    // loader resolves in a few ms (cache hit), but once the 5-minute
+    // defaultStaleTime above has elapsed since a query was last fetched,
+    // ensureQueryData in the loader does a real network round trip before
+    // the loader resolves — measured at 10+ seconds against the live prod
+    // Supabase-backed server functions in one repro. For that whole window,
+    // the address bar/nav says you're on the new page while every pixel on
+    // screen is still the old one; whatever finally swaps in (and however
+    // scroll position lands at that moment — see the onBeforeNavigate
+    // handler below) is what showed up as a stray strip of the old page's
+    // text sitting under the header.
+    //
+    // This was removed once before (see git history) because an
+    // *unconditional* pendingComponent was flashing to a blank
+    // min-h-[70vh] block on every navigation, back when defaultStaleTime was
+    // ~0 and therefore every click triggered a refetch. That's not a risk
+    // now: defaultPendingMs (TanStack's default is 1000ms, left as default
+    // here) means the progress bar only appears if the loader is still
+    // pending after a full second — fast/cached navigations never show it,
+    // only the genuinely slow stale-refetch case does, and now that slow
+    // case gets an honest loading state instead of silently showing stale
+    // content under a URL that's already moved on.
+    defaultPendingComponent: RouteProgressBar,
   });
 
   // The bug behind the "random text/image flashing under the header"

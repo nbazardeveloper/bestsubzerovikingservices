@@ -1,8 +1,8 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { ArrowLeft, Phone } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 import { getBlogPostBySlug } from "@/lib/site.functions";
 import { buildTitle, buildMetaDescription, absUrl } from "@/lib/seo";
+import { FinalCta } from "@/components/site/FinalCta";
 
 // A paragraph entry is treated as a subheading (not body copy) when it's
 // short and doesn't end like a sentence — matches how the source articles
@@ -119,26 +119,12 @@ function PostDetail() {
             ),
           )}
         </div>
-
-        <div className="mt-12 rounded-2xl border border-border bg-card p-6 text-center md:p-8">
-          <h2 className="text-xl font-semibold tracking-tight">Ready to book a diagnostic?</h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Call now or send a request and we'll get back to you promptly.
-          </p>
-          <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <a href="tel:+18887028565">
-              <Button size="lg" className="gap-2">
-                <Phone className="h-4 w-4" /> Call (888) 702-8565
-              </Button>
-            </a>
-            <Link to="/contact">
-              <Button size="lg" variant="outline">
-                Request service
-              </Button>
-            </Link>
-          </div>
-        </div>
       </section>
+
+      <FinalCta
+        heading="Ready to book a diagnostic?"
+        subtitle="Call now or send a request and we'll get back to you promptly."
+      />
     </div>
   );
 }

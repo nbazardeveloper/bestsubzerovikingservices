@@ -8,6 +8,7 @@ import { ImagePlaceholder } from "@/components/site/ImagePlaceholder";
 import { SpecialistBrandsBand } from "@/components/site/SpecialistBrandsBand";
 import { listServices } from "@/lib/site.functions";
 import { getServiceIcon, getServiceCategoryIconClassName } from "@/lib/service-category-icons";
+import { FinalCta } from "@/components/site/FinalCta";
 
 export const Route = createFileRoute("/services")({
   head: () => ({
@@ -171,6 +172,8 @@ function ServicesPage() {
           ) : null}
         </div>
       </section>
+
+      <FinalCta />
     </div>
   );
 }

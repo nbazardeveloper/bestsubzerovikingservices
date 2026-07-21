@@ -55,7 +55,7 @@ export function SiteFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mt-24 border-t border-border bg-muted/40">
+    <footer className="border-t border-white/10 bg-primary text-primary-foreground">
       <div className="mx-auto grid max-w-7xl gap-x-8 gap-y-12 px-4 py-14 sm:grid-cols-2 md:px-8 lg:grid-cols-[1.4fr_1fr_1fr]">
         <div className="min-w-0">
           <div className="flex items-center gap-3">
@@ -68,7 +68,7 @@ export function SiteFooter() {
             />
             <span className="text-sm font-semibold">Best Sub-Zero &amp; Viking Service</span>
           </div>
-          <p className="mt-4 max-w-xs text-sm text-muted-foreground">
+          <p className="mt-4 max-w-xs text-sm text-primary-foreground/70">
             Honest, expert repair for Sub-Zero, Viking, Wolf and other premium residential kitchen
             appliances, serving NY &amp; NJ. Residential appliance repair only.
           </p>
@@ -99,14 +99,14 @@ export function SiteFooter() {
         </div>
 
         <div className="min-w-0">
-          <h3 className="text-sm font-semibold tracking-wide text-foreground">Contact</h3>
-          <ul className="mt-4 space-y-2.5 text-sm text-muted-foreground">
+          <h3 className="text-sm font-semibold tracking-wide text-primary-foreground">Contact</h3>
+          <ul className="mt-4 space-y-2.5 text-sm text-primary-foreground/70">
             {s ? (
               <>
                 <li className="min-w-0">
                   <a
                     href={`tel:${s.phone.replace(/[^+\d]/g, "")}`}
-                    className="flex min-w-0 items-center gap-2 transition-colors hover:text-foreground"
+                    className="flex min-w-0 items-center gap-2 transition-colors hover:text-primary-foreground"
                   >
                     <Phone className="h-4 w-4 flex-shrink-0" aria-hidden />
                     <span className="truncate">{s.phone}</span>
@@ -115,7 +115,7 @@ export function SiteFooter() {
                 <li className="min-w-0">
                   <a
                     href={`mailto:${s.email}`}
-                    className="flex min-w-0 items-center gap-2 transition-colors hover:text-foreground"
+                    className="flex min-w-0 items-center gap-2 transition-colors hover:text-primary-foreground"
                   >
                     <Mail className="h-4 w-4 flex-shrink-0" aria-hidden />
                     <span className="min-w-0 truncate text-xs">{s.email}</span>
@@ -124,13 +124,15 @@ export function SiteFooter() {
                 {s.hours ? <li className="pt-1 text-xs leading-relaxed">{s.hours}</li> : null}
               </>
             ) : null}
-            <li className="pt-1 text-xs font-medium text-foreground">
+            <li className="pt-1 text-xs font-medium text-primary-foreground">
               24/7 online scheduling — service 7 days a week
             </li>
           </ul>
 
-          <h3 className="mt-6 text-sm font-semibold tracking-wide text-foreground">Follow us</h3>
-          <div className="mt-4 flex items-center gap-4 text-muted-foreground">
+          <h3 className="mt-6 text-sm font-semibold tracking-wide text-primary-foreground">
+            Follow us
+          </h3>
+          <div className="mt-4 flex items-center gap-4 text-primary-foreground/70">
             {s?.social_links?.instagram ? (
               <a
                 href={s.social_links.instagram}
@@ -168,8 +170,10 @@ export function SiteFooter() {
         </div>
 
         <div className="min-w-0 lg:hidden">
-          <h3 className="text-sm font-semibold tracking-wide text-foreground">Service area</h3>
-          <ul className="mt-4 grid grid-cols-2 gap-x-4 gap-y-1.5 text-sm text-muted-foreground">
+          <h3 className="text-sm font-semibold tracking-wide text-primary-foreground">
+            Service area
+          </h3>
+          <ul className="mt-4 grid grid-cols-2 gap-x-4 gap-y-1.5 text-sm text-primary-foreground/70">
             {AREAS.map((a) => (
               <li key={a}>{a}</li>
             ))}
@@ -177,35 +181,38 @@ export function SiteFooter() {
         </div>
 
         <div className="min-w-0">
-          <h3 className="text-sm font-semibold tracking-wide text-foreground">Site</h3>
-          <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
+          <h3 className="text-sm font-semibold tracking-wide text-primary-foreground">Site</h3>
+          <ul className="mt-4 space-y-2 text-sm text-primary-foreground/70">
             <li>
-              <Link to="/services" className="transition-colors hover:text-foreground">
+              <Link to="/services" className="transition-colors hover:text-primary-foreground">
                 All services
               </Link>
             </li>
             <li>
-              <Link to="/projects" className="transition-colors hover:text-foreground">
+              <Link to="/projects" className="transition-colors hover:text-primary-foreground">
                 Recent projects
               </Link>
             </li>
             <li>
-              <Link to="/reviews" className="transition-colors hover:text-foreground">
+              <Link to="/reviews" className="transition-colors hover:text-primary-foreground">
                 Customer reviews
               </Link>
             </li>
             <li>
-              <Link to="/blog" className="transition-colors hover:text-foreground">
+              <Link to="/blog" className="transition-colors hover:text-primary-foreground">
                 Blog
               </Link>
             </li>
             <li>
-              <Link to="/faq" className="transition-colors hover:text-foreground">
+              <Link to="/faq" className="transition-colors hover:text-primary-foreground">
                 Frequently asked questions
               </Link>
             </li>
             <li>
-              <Link to="/privacy-policy" className="transition-colors hover:text-foreground">
+              <Link
+                to="/privacy-policy"
+                className="transition-colors hover:text-primary-foreground"
+              >
                 Privacy policy
               </Link>
             </li>
@@ -216,14 +223,16 @@ export function SiteFooter() {
       {/* Service area — its own full-width row on desktop only (the 8 areas
           didn't fit cleanly inside the narrow 4th grid column at the lg
           breakpoint); mobile/tablet keep the compact list in the grid above. */}
-      <div className="hidden border-t border-border lg:block">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-5 text-sm text-muted-foreground md:px-8">
-          <h3 className="text-sm font-semibold tracking-wide text-foreground">Service area</h3>
+      <div className="hidden border-t border-white/10 lg:block">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-5 text-sm text-primary-foreground/70 md:px-8">
+          <h3 className="text-sm font-semibold tracking-wide text-primary-foreground">
+            Service area
+          </h3>
           {AREAS.map((a, i) => (
             <span key={a} className="flex items-center gap-6">
               {a}
               {i < AREAS.length - 1 ? (
-                <span aria-hidden className="text-border">
+                <span aria-hidden className="text-primary-foreground/20">
                   ·
                 </span>
               ) : null}
@@ -233,9 +242,9 @@ export function SiteFooter() {
       </div>
 
       {/* Easy payment options — accepted payment methods, shown site-wide. */}
-      <div className="border-t border-border bg-background/60">
+      <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-7xl flex-col items-center gap-3 px-4 py-5 text-center md:flex-row md:justify-center md:gap-6 md:px-8">
-          <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-foreground">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-primary-foreground">
             Easy payment options
           </span>
           <div className="flex flex-wrap items-center justify-center gap-2">
@@ -257,7 +266,7 @@ export function SiteFooter() {
           an infinite marquee (paused on hover); the sr-only list keeps the
           brand names readable to screen readers and search engines without
           announcing the duplicated scroll copy. */}
-      <div className="border-t border-border bg-muted/20 py-6">
+      <div className="border-t border-white/10 py-6">
         <span className="sr-only">Brands we service: {BRANDS.join(", ")}</span>
         <div className="marquee-edge-fade overflow-hidden" aria-hidden="true">
           <div className="animate-marquee flex w-max items-center">
@@ -265,7 +274,7 @@ export function SiteFooter() {
               <div key={rep} className="flex items-center">
                 {BRANDS.map((b) => (
                   <span key={`${rep}-${b}`} className="flex items-center gap-3 px-6">
-                    <span className="font-display text-lg font-semibold tracking-tight text-foreground whitespace-nowrap md:text-xl">
+                    <span className="font-display text-lg font-semibold tracking-tight text-primary-foreground whitespace-nowrap md:text-xl">
                       {b}
                     </span>
                     <span
@@ -280,45 +289,12 @@ export function SiteFooter() {
         </div>
       </div>
 
-      <div className="border-t border-border">
-        <div className="mx-auto max-w-7xl px-4 py-5 text-xs text-muted-foreground md:px-8">
+      <div className="border-t border-white/10">
+        <div className="mx-auto max-w-7xl px-4 py-5 text-xs text-primary-foreground/60 md:px-8">
           <span>
             © {year} Best Sub-Zero &amp; Viking Service. All rights reserved. Independent Sub-Zero
             Appliance Care | Not Affiliated with SUB-ZERO GROUP INC.
           </span>
-        </div>
-      </div>
-
-      {/* Small print: trademark/affiliation disclaimer, plus the required
-          attribution for free-tier Noun Project icons used across the "Why
-          choose us" and service-category icon sets (Noun Project's CC BY
-          license requires naming each icon's creator — not just linking the
-          site — so the names have to stay, but this is trimmed to a plain
-          list instead of a full sentence to take up less room). Combined
-          into one bordered block so it reads as one compact footnote. */}
-      <div className="border-t border-border bg-muted/30">
-        <div className="mx-auto max-w-7xl space-y-1.5 px-4 py-3 text-[11px] leading-snug text-muted-foreground md:px-8">
-          <p>
-            Best Sub-Zero &amp; Viking Service is an independent service company. We specialize in
-            the repair and maintenance of Sub-Zero, Viking and Wolf appliances, but we are not the
-            manufacturer, an authorized dealer, or a factory-affiliated service center for these
-            brands. All brand names, trademarks and logos are the property of their respective
-            owners.
-          </p>
-          <p>
-            Icons: Puspito, metami septiana, miftahul huda, Graphixs_Art, Satria Arnata, Adi Waluyo
-            Noto Carito, ATOM, Adnan Thariq, Larea, ic2icon, Cahya Kurniawan, Template, rendicon,
-            Yosua Bungaran, wyasa design —{" "}
-            <a
-              href="https://thenounproject.com"
-              target="_blank"
-              rel="noreferrer noopener"
-              className="underline hover:text-foreground"
-            >
-              Noun Project
-            </a>
-            .
-          </p>
         </div>
       </div>
     </footer>

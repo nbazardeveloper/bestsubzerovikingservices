@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { GoogleIcon, YelpIcon } from "@/components/site/BrandIcons";
 import { getSiteSettings } from "@/lib/site.functions";
 import { SITE_REVIEWS } from "@/lib/reviews-data";
+import { FinalCta } from "@/components/site/FinalCta";
 
 export const Route = createFileRoute("/reviews")({
   head: () => ({
@@ -106,6 +107,8 @@ function Reviews() {
           ))}
         </div>
       </section>
+
+      <FinalCta />
     </div>
   );
 }

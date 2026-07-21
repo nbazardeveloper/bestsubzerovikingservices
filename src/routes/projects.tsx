@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ImagePlaceholder } from "@/components/site/ImagePlaceholder";
 import { listProjects } from "@/lib/site.functions";
+import { FinalCta } from "@/components/site/FinalCta";
 
 const COMPLETED_JOBS_MAP_URL =
   "https://www.google.com/maps/d/u/0/viewer?mid=1KRsUeTkfj5YfyxZIZ93085Ynm4D4Cz0&ll=40.63165163668629%2C-74.13427010000002&z=10";
@@ -133,6 +134,8 @@ function ProjectsPage() {
           ))}
         </div>
       </section>
+
+      <FinalCta />
     </div>
   );
 }

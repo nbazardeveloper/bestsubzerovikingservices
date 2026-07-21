@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { ImagePlaceholder } from "@/components/site/ImagePlaceholder";
 import { getServiceBySlug, listServices, getSiteSettings } from "@/lib/site.functions";
 import { buildTitle, buildMetaDescription, absUrl, DEFAULT_OG_IMAGE } from "@/lib/seo";
+import { FinalCta } from "@/components/site/FinalCta";
 
 const AREAS = [
   "Staten Island",
@@ -225,6 +226,8 @@ function ServiceDetail() {
           </div>
         </section>
       ) : null}
+
+      <FinalCta />
     </div>
   );
 }

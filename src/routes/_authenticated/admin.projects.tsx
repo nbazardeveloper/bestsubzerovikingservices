@@ -18,6 +18,7 @@ import {
 import { adminListProjects, adminSaveProject, adminDeleteProject } from "@/lib/admin.functions";
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
+import { slugify } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/admin/projects")({
   component: ProjectsAdmin,
@@ -73,13 +74,37 @@ function ProjectsAdmin() {
     }
   }
 
+  // `slug` is an internal URL-safe id (also used as the anchor id on the
+  // public /projects page) — not something the client should ever need to
+  // understand or type in. It's derived from the Title automatically, and
+  // silently de-duplicated (my-project, my-project-2, ...) if another
+  // project already generated the same one, so a save can never fail with
+  // Supabase's raw "duplicate key value violates unique constraint
+  // projects_slug_key" error.
+  function uniqueSlugFor(title: string, excludeId: string | undefined): string {
+    const base = slugify(title) || "project";
+    const taken = new Set(data.filter((p) => p.id !== excludeId).map((p) => p.slug));
+    if (!taken.has(base)) return base;
+    let n = 2;
+    while (taken.has(`${base}-${n}`)) n++;
+    return `${base}-${n}`;
+  }
+
   async function save() {
+    if (!form.title.trim()) {
+      toast.error("Title is required");
+      return;
+    }
+    // Existing projects keep their original slug (it's already unique, and
+    // changing it would move the anchor URL people may have bookmarked);
+    // only new ones get one generated now.
+    const slug = form.id ? form.slug : uniqueSlugFor(form.title, form.id);
     setSaving(true);
     try {
       await adminSaveProject({
         data: {
           id: form.id,
-          slug: form.slug,
+          slug,
           title: form.title,
           description: form.description,
           brands: form.brands
@@ -97,7 +122,12 @@ function ProjectsAdmin() {
       setForm(EMPTY);
       qc.invalidateQueries({ queryKey: ["admin-projects"] });
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Save failed");
+      const message = e instanceof Error ? e.message : "Save failed";
+      toast.error(
+        message.includes("slug_key") || message.includes("duplicate key")
+          ? "Couldn't save — a project with a very similar title already exists. Try tweaking the title slightly."
+          : message,
+      );
     } finally {
       setSaving(false);
     }
@@ -173,13 +203,6 @@ function ProjectsAdmin() {
                 <Input
                   value={form.title}
                   onChange={(e) => setForm({ ...form, title: e.target.value })}
-                />
-              </div>
-              <div>
-                <Label>Slug</Label>
-                <Input
-                  value={form.slug}
-                  onChange={(e) => setForm({ ...form, slug: e.target.value })}
                 />
               </div>
               <div>

@@ -10,6 +10,7 @@ import { ReviewsBar } from "@/components/site/ReviewsBar";
 import { SpecialistBrandsBand } from "@/components/site/SpecialistBrandsBand";
 import { TestimonialCarousel } from "@/components/site/TestimonialCarousel";
 import { LazyYouTubeBackground } from "@/components/site/LazyYouTubeBackground";
+import { FinalCta } from "@/components/site/FinalCta";
 import { SITE_REVIEWS } from "@/lib/reviews-data";
 import {
   YearsIcon,
@@ -236,11 +237,16 @@ function Home() {
 
       {/* WHY CHOOSE US / ADVANTAGES — diagonal two-tone panel adapted from the
           client reference, using real hero photography (clipped diagonally)
-          instead of a stock technician/appliance composite. */}
+          instead of a stock technician/appliance composite. `will-change-transform`
+          forces this clip-path panel onto its own compositor layer — without it,
+          Chrome was occasionally reusing/ghosting a stale rasterized tile of this
+          section's text into the sticky-header area for a frame right after an
+          in-app navigation (reported as a "glitch strip" between the header and
+          hero on the homepage). */}
       <section className="relative isolate overflow-hidden bg-background">
         <div
           aria-hidden
-          className="absolute inset-y-0 left-0 hidden w-[44%] overflow-hidden shadow-[12px_0_30px_-8px_rgba(0,0,0,0.3)] [clip-path:polygon(0_0,100%_0,82%_100%,0_100%)] lg:block"
+          className="absolute inset-y-0 left-0 hidden w-[44%] overflow-hidden shadow-[12px_0_30px_-8px_rgba(0,0,0,0.3)] [clip-path:polygon(0_0,100%_0,82%_100%,0_100%)] will-change-transform lg:block"
         >
           <ImagePlaceholder
             fill
@@ -466,13 +472,13 @@ function Home() {
               See full service area →
             </Link>
           </div>
-          <div className="overflow-hidden rounded-lg border border-border">
+          <div className="h-[420px] overflow-hidden rounded-lg border border-border md:h-[640px]">
             <iframe
               title="Map of completed appliance repair jobs across NY & NJ"
               src="https://www.google.com/maps/d/embed?mid=1KRsUeTkfj5YfyxZIZ93085Ynm4D4Cz0&ll=40.63165163668629%2C-74.13427010000002&z=10"
               width="100%"
               height="100%"
-              className="aspect-video border-0"
+              className="border-0"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
             />
@@ -481,11 +487,12 @@ function Home() {
       </section>
 
       {/* FAQ PREVIEW — same diagonal two-tone treatment as "Why choose us",
-          mirrored so the photo panel sits on the right. */}
+          mirrored so the photo panel sits on the right. Same will-change-transform
+          fix as above (see comment there) for the same clip-path ghosting glitch. */}
       <section className="relative isolate overflow-hidden border-t border-border bg-background">
         <div
           aria-hidden
-          className="absolute inset-y-0 right-0 hidden w-[44%] overflow-hidden shadow-[-12px_0_30px_-8px_rgba(0,0,0,0.3)] [clip-path:polygon(100%_0,0_0,18%_100%,100%_100%)] lg:block"
+          className="absolute inset-y-0 right-0 hidden w-[44%] overflow-hidden shadow-[-12px_0_30px_-8px_rgba(0,0,0,0.3)] [clip-path:polygon(100%_0,0_0,18%_100%,100%_100%)] will-change-transform lg:block"
         >
           <ImagePlaceholder
             fill
@@ -516,28 +523,7 @@ function Home() {
       </section>
 
       {/* FINAL CTA */}
-      <section className="mx-auto max-w-4xl px-4 py-24 md:px-8">
-        <div className="rounded-2xl border border-border bg-card p-8 text-center md:p-12">
-          <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
-            Ready to <span className="text-accent">book</span> a diagnostic?
-          </h2>
-          <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
-            Book your appointment online, or call us directly for same-day help.
-          </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <a href={telHref}>
-              <Button size="lg" className="gap-2">
-                <Phone className="h-4 w-4" /> Call {phone}
-              </Button>
-            </a>
-            <Link to="/contact">
-              <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
-                Book online
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
+      <FinalCta />
     </div>
   );
 }

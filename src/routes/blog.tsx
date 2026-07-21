@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { absUrl, DEFAULT_OG_IMAGE } from "@/lib/seo";
+import { FinalCta } from "@/components/site/FinalCta";
 
 const SORO_EMBED_SRC = "https://app.trysoro.com/api/embed/dde6d064-824d-4996-93f6-494a8776867f";
 
@@ -68,6 +69,8 @@ function BlogIndex() {
       <section className="mx-auto max-w-7xl px-4 py-10 md:px-8">
         <div id="soro-blog" suppressHydrationWarning />
       </section>
+
+      <FinalCta />
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { listProjects } from "@/lib/site.functions";
+import { FinalCta } from "@/components/site/FinalCta";
 
 export const Route = createFileRoute("/projects_/gallery")({
   head: () => ({
@@ -100,6 +101,8 @@ function GalleryPage() {
           ))}
         </div>
       </section>
+
+      <FinalCta />
     </div>
   );
 }

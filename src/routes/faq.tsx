@@ -6,6 +6,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { FinalCta } from "@/components/site/FinalCta";
 
 const FAQ = [
   {
@@ -111,6 +112,8 @@ function FAQPage() {
           ))}
         </Accordion>
       </section>
+
+      <FinalCta />
     </div>
   );
 }

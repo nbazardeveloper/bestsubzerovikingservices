@@ -18,6 +18,7 @@ import {
 import { adminListServices, adminSaveService, adminDeleteService } from "@/lib/admin.functions";
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
+import { slugify } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/admin/services")({
   component: ServicesAdmin,
@@ -80,13 +81,36 @@ function ServicesAdmin() {
     }
   }
 
+  // `slug` is the URL segment for the public /services/$slug page — an
+  // internal detail the client shouldn't need to understand or type in.
+  // Derived from the Title automatically and silently de-duplicated
+  // (my-service, my-service-2, ...) against the other services already
+  // loaded, so a save can never fail with Supabase's raw "duplicate key
+  // value violates unique constraint services_slug_key" error.
+  function uniqueSlugFor(title: string, excludeId: string | undefined): string {
+    const base = slugify(title) || "service";
+    const taken = new Set(data.filter((s) => s.id !== excludeId).map((s) => s.slug));
+    if (!taken.has(base)) return base;
+    let n = 2;
+    while (taken.has(`${base}-${n}`)) n++;
+    return `${base}-${n}`;
+  }
+
   async function save() {
+    if (!form.title.trim()) {
+      toast.error("Title is required");
+      return;
+    }
+    // Existing services keep their original slug — it's already unique, and
+    // changing it would move the live public URL out from under anyone who
+    // bookmarked or linked to it; only new ones get one generated now.
+    const slug = form.id ? form.slug : uniqueSlugFor(form.title, form.id);
     setSaving(true);
     try {
       await adminSaveService({
         data: {
           id: form.id,
-          slug: form.slug,
+          slug,
           title: form.title,
           brands: form.brands
             .split(",")
@@ -106,7 +130,12 @@ function ServicesAdmin() {
       setForm(EMPTY);
       qc.invalidateQueries({ queryKey: ["admin-services"] });
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Save failed");
+      const message = e instanceof Error ? e.message : "Save failed";
+      toast.error(
+        message.includes("slug_key") || message.includes("duplicate key")
+          ? "Couldn't save — a service with a very similar title already exists. Try tweaking the title slightly."
+          : message,
+      );
     } finally {
       setSaving(false);
     }
@@ -187,13 +216,6 @@ function ServicesAdmin() {
                 <Input
                   value={form.title}
                   onChange={(e) => setForm({ ...form, title: e.target.value })}
-                />
-              </div>
-              <div>
-                <Label>Slug</Label>
-                <Input
-                  value={form.slug}
-                  onChange={(e) => setForm({ ...form, slug: e.target.value })}
                 />
               </div>
               <div>

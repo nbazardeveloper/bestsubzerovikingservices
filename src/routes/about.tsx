@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { absUrl, DEFAULT_OG_IMAGE } from "@/lib/seo";
 import { CheckCircle2 } from "lucide-react";
 import { ImagePlaceholder } from "@/components/site/ImagePlaceholder";
+import { FinalCta } from "@/components/site/FinalCta";
 
 const PROCESS = [
   {
@@ -61,10 +62,7 @@ function About() {
       <section className="border-b border-border">
         <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 md:grid-cols-2 md:px-8 md:py-20">
           <div>
-            <span className="text-xs font-medium uppercase tracking-[0.2em] text-accent">
-              About us
-            </span>
-            <h1 className="mt-4 text-4xl font-semibold tracking-tight md:text-5xl">
+            <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">
               Premium appliance repair, done <span className="text-accent">honestly</span>.
             </h1>
             <p className="mt-5 max-w-xl text-lg text-muted-foreground">
@@ -130,6 +128,8 @@ function About() {
           </div>
         </div>
       </section>
+
+      <FinalCta />
     </div>
   );
 }
