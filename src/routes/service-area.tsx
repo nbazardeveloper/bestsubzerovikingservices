@@ -50,7 +50,7 @@ export const Route = createFileRoute("/service-area")({
       {
         name: "description",
         content:
-          "We repair premium kitchen appliances in Staten Island, Brooklyn, Queens, Long Island near Queens (Great Neck and nearby Nassau towns), Jersey City, Elizabeth NJ, and North and Central New Jersey.",
+          "We repair premium kitchen appliances across Staten Island, Brooklyn, Queens, Long Island near Queens, Jersey City, Elizabeth NJ and North & Central New Jersey.",
       },
       { property: "og:title", content: "Service Area" },
       { property: "og:description", content: "Where we repair premium kitchen appliances." },

@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { getBlogPostBySlug } from "@/lib/site.functions";
-import { buildTitle, buildMetaDescription, absUrl } from "@/lib/seo";
+import { buildTitle, buildMetaDescription, absUrl, DEFAULT_OG_IMAGE } from "@/lib/seo";
 import { FinalCta } from "@/components/site/FinalCta";
 
 // A paragraph entry is treated as a subheading (not body copy) when it's
@@ -33,7 +33,7 @@ export const Route = createFileRoute("/post/$slug")({
         { property: "og:description", content: description },
         { property: "og:url", content: absUrl(`/post/${post.slug}`) },
         { property: "og:type", content: "article" },
-        { property: "og:image", content: post.hero_image ?? undefined },
+        { property: "og:image", content: post.hero_image ?? DEFAULT_OG_IMAGE },
       ],
       links: [{ rel: "canonical", href: absUrl(`/post/${post.slug}`) }],
       scripts: [
@@ -44,7 +44,7 @@ export const Route = createFileRoute("/post/$slug")({
             "@type": "BlogPosting",
             headline: post.title,
             description,
-            image: post.hero_image,
+            ...(post.hero_image ? { image: post.hero_image } : {}),
             datePublished: post.published_at,
             dateModified: post.published_at,
             author: { "@type": "Organization", name: "Best Sub-Zero & Viking Service" },
@@ -96,15 +96,17 @@ function PostDetail() {
       </section>
 
       <section className="mx-auto max-w-3xl px-4 py-10 md:px-8">
-        <div className="overflow-hidden rounded-lg">
-          <img
-            src={post.hero_image ?? undefined}
-            alt={post.title}
-            className="h-full w-full object-cover"
-            loading="eager"
-            fetchPriority="high"
-          />
-        </div>
+        {post.hero_image ? (
+          <div className="overflow-hidden rounded-lg">
+            <img
+              src={post.hero_image}
+              alt={post.title}
+              className="h-full w-full object-cover"
+              loading="eager"
+              fetchPriority="high"
+            />
+          </div>
+        ) : null}
 
         <div className="prose prose-neutral mt-10 max-w-none text-base leading-relaxed text-foreground">
           {post.paragraphs.map((para, i) =>

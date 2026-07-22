@@ -163,6 +163,61 @@ export const getBlogPostBySlug = createServerFn({ method: "GET" })
     return row;
   });
 
+// ============================================================================
+// CRM forwarding (GoHighLevel / LeadConnector)
+// ============================================================================
+// Every lead submitted through the site (Contact page form + chat widget)
+// still gets saved to Supabase first — that write is the source of truth for
+// /admin/leads. After that succeeds, we best-effort POST the same lead to
+// the client's CRM (GoHighLevel) so it shows up there too, without ever
+// failing/blocking the visitor's submission if the CRM is unreachable or
+// misconfigured.
+//
+// Setup: in GoHighLevel, create an Automation → Workflow, add a "Webhook"
+// trigger (or an "Inbound Webhook"), save it, and copy the URL it gives you
+// (looks like https://services.leadconnectorhq.com/hooks/<location-id>/webhook-trigger/<id>).
+// Set that URL as GHL_WEBHOOK_URL — locally in .env, and in production as a
+// Cloudflare Worker "Secret" (Settings → Variables and Secrets on the
+// Worker), not a plaintext var, since the URL itself acts as the auth token.
+// Leave it unset to disable CRM forwarding entirely (nothing breaks).
+function ghlWebhookUrl(): string | undefined {
+  return process.env.GHL_WEBHOOK_URL || undefined;
+}
+
+async function forwardLeadToCRM(data: {
+  name: string;
+  phone: string;
+  email?: string;
+  service_area?: string;
+  message?: string;
+  source_page?: string;
+}): Promise<void> {
+  const url = ghlWebhookUrl();
+  if (!url) return; // CRM forwarding not configured — no-op
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        full_name: data.name,
+        name: data.name,
+        phone: data.phone,
+        email: data.email || undefined,
+        service_area: data.service_area || undefined,
+        message: data.message || undefined,
+        source: data.source_page || "website",
+        submitted_at: new Date().toISOString(),
+      }),
+    });
+    if (!res.ok) {
+      console.error(`[ghl-webhook] CRM forward failed: ${res.status} ${await res.text()}`);
+    }
+  } catch (err) {
+    // Never let a CRM outage break lead capture on the site.
+    console.error("[ghl-webhook] CRM forward threw:", err instanceof Error ? err.message : err);
+  }
+}
+
 export const submitLead = createServerFn({ method: "POST" })
   .inputValidator(
     (d: {
@@ -196,5 +251,10 @@ export const submitLead = createServerFn({ method: "POST" })
       status: "new",
     });
     if (error) throw new Error(error.message);
+
+    // Fire-and-forget: don't await-block the response on the CRM call, and
+    // never let it turn a successful save into a user-facing error.
+    void forwardLeadToCRM(data);
+
     return { ok: true };
   });

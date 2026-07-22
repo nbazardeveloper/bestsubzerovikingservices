@@ -63,7 +63,7 @@ export const mockServices: MockService[] = [
     short_description: "Expert repair for built-in and freestanding refrigerators and freezers.",
     description:
       "We service Sub-Zero, Viking, Thermador and other premium built-in and freestanding refrigerators and freezers. Common issues we resolve include temperature problems, compressor failures, evaporator icing, condenser cleaning, control board faults, door seal replacement and drainage issues.",
-    image_url: "/images/services/Refrigeration.webp",
+    image_url: "/images/services/refrigerator-freezer-repair.webp",
     is_published: true,
     is_featured: true,
     sort_order: 1,
@@ -78,7 +78,7 @@ export const mockServices: MockService[] = [
     short_description: "Precision service for wine preservation units and dual-zone wine coolers.",
     description:
       "Wine coolers require careful diagnostics to protect your collection. We repair cooling systems, thermostats, dual-zone controls, humidity issues, door seals and lighting on Sub-Zero, Viking and other premium wine preservation units.",
-    image_url: "/images/services/WineCooler.webp",
+    image_url: "/images/services/wine-cooler-repair.webp",
     is_published: true,
     is_featured: false,
     sort_order: 2,
@@ -100,10 +100,10 @@ export const mockServices: MockService[] = [
       "Manitowoc",
     ],
     category: "Refrigeration",
-    short_description: "Repair for built-in and clear-ice ice makers, all major brands.",
+    short_description: "Repair for built-in and clear-ice ice makers.",
     description:
-      "From dedicated built-in ice makers to in-refrigerator ice systems, we service Sub-Zero, Scotsman, Hoshizaki, U-Line, Marvel, KitchenAid, GE Monogram, Viking, Manitowoc and other major brands — diagnosing water inlet valves, ice mold heaters, augers, control modules and clear-ice production issues.",
-    image_url: "/images/services/IceMaker.webp",
+      "From dedicated built-in ice makers to in-refrigerator ice systems, we diagnose water inlet valves, ice mold heaters, augers, control modules and clear-ice production issues.",
+    image_url: "/images/services/ice-maker-repair.webp",
     is_published: true,
     is_featured: false,
     sort_order: 3,
@@ -115,11 +115,10 @@ export const mockServices: MockService[] = [
     title: "Range & Stove Repair",
     brands: ["Viking", "Wolf", "Thermador", "Bertazzoni", "Dacor"],
     category: "Cooking",
-    short_description:
-      "Gas and electric range and stove repair — all brands, specializing in Viking, Wolf & Sub-Zero.",
+    short_description: "Gas and electric range and stove repair for premium brands.",
     description:
-      "We repair gas and dual-fuel ranges and stoves across all brands, with specialized expertise in Viking, Wolf and Sub-Zero. Work includes sealed burners, ignition modules, safety valves, oven igniters, electric elements and control boards.",
-    image_url: "/images/services/Cooking.webp",
+      "We repair gas and dual-fuel ranges, sealed burners, ignition modules, safety valves, oven igniters, electric elements and control boards on Viking, Wolf, Thermador, Bertazzoni and Dacor equipment.",
+    image_url: "/images/services/range-stove-repair.webp",
     is_published: true,
     is_featured: true,
     sort_order: 4,
@@ -131,11 +130,10 @@ export const mockServices: MockService[] = [
     title: "Oven Repair",
     brands: ["Wolf", "Viking", "Thermador", "Bosch"],
     category: "Cooking",
-    short_description:
-      "Wall oven and range oven diagnostics and repair — all brands, specializing in Wolf, Viking & Sub-Zero.",
+    short_description: "Wall oven and range oven diagnostics and repair.",
     description:
-      "Wall ovens, double ovens, convection and steam ovens — we repair all brands, with specialized expertise in Wolf, Viking and Sub-Zero. We address heating faults, thermostat calibration, door hinges, glass replacement, control boards and fan systems.",
-    image_url: "/images/services/Oven.webp",
+      "Wall ovens, double ovens, convection and steam ovens — we address heating faults, thermostat calibration, door hinges, glass replacement, control boards and fan systems.",
+    image_url: "/images/services/oven-repair.webp",
     is_published: true,
     is_featured: false,
     sort_order: 5,
@@ -147,11 +145,10 @@ export const mockServices: MockService[] = [
     title: "Cooktop Repair",
     brands: ["Wolf", "Viking", "Thermador", "Bosch"],
     category: "Cooking",
-    short_description:
-      "Gas, induction and electric cooktop repair — all brands, specializing in Wolf, Viking & Sub-Zero.",
+    short_description: "Gas, induction and electric cooktop repair.",
     description:
-      "Cooktop repair for gas, induction and radiant electric surfaces, across all brands, with specialized expertise in Wolf, Viking and Sub-Zero. We handle burner ignition, sealed-burner cleaning and rebuild, induction coil replacement, glass-top replacement and touch controls.",
-    image_url: "/images/services/Cooktop.webp",
+      "Cooktop repair for gas, induction and radiant electric surfaces. We handle burner ignition, sealed-burner cleaning and rebuild, induction coil replacement, glass-top replacement and touch controls.",
+    image_url: "/images/services/cooktop-repair.webp",
     is_published: true,
     is_featured: false,
     sort_order: 6,
@@ -166,7 +163,7 @@ export const mockServices: MockService[] = [
     short_description: "Repair for professional range hoods, blowers and downdraft ventilation.",
     description:
       "We service internal and external blowers, downdraft systems, lighting, dampers and controls on professional-grade range hoods.",
-    image_url: "/images/services/Ventilation.webp",
+    image_url: "/images/services/range-hood-repair.webp",
     is_published: true,
     is_featured: false,
     sort_order: 7,
@@ -181,7 +178,7 @@ export const mockServices: MockService[] = [
     short_description: "Repair for outdoor grills, outdoor refrigeration and BBQ islands.",
     description:
       "We repair outdoor grills, outdoor refrigeration, warming drawers and outdoor kitchen components — burners, ignition, gas systems and weather-related failures.",
-    image_url: "/images/services/Outdoor.webp",
+    image_url: "/images/services/outdoor-kitchen-bbq-repair.webp",
     is_published: true,
     is_featured: false,
     sort_order: 8,
@@ -196,7 +193,7 @@ export const mockServices: MockService[] = [
     short_description: "Precise repair for built-in warming drawers.",
     description:
       "Warming drawer heating elements, controls, thermostats and drawer mechanisms serviced on Wolf, Viking and Thermador units.",
-    image_url: "/images/services/WarmingDrawer.webp",
+    image_url: "/images/services/warming-drawer-repair.webp",
     is_published: true,
     is_featured: false,
     sort_order: 9,
@@ -211,7 +208,7 @@ export const mockServices: MockService[] = [
     short_description: "Built-in and speed-oven microwave repair.",
     description:
       "We repair built-in microwaves, drawer microwaves, speed ovens and convection microwaves, including magnetrons, high-voltage components, door interlocks and control boards.",
-    image_url: "/images/services/Microwave.webp",
+    image_url: "/images/services/microwave-repair.webp",
     is_published: true,
     is_featured: false,
     sort_order: 10,
@@ -235,7 +232,7 @@ export const mockServices: MockService[] = [
     short_description: "Scheduled maintenance to extend the life of premium appliances.",
     description:
       "Preventive maintenance for refrigeration and cooking appliances: condenser cleaning, seal inspection, calibration, safety checks and full diagnostics to prevent costly failures.",
-    image_url: "/images/services/Maintenance.webp",
+    image_url: "/images/services/preventive-maintenance.webp",
     is_published: true,
     is_featured: true,
     sort_order: 11,

@@ -15,17 +15,6 @@ import { GoogleIcon, YelpIcon } from "@/components/site/BrandIcons";
 import { VenmoIcon, ZelleIcon } from "@/components/site/icons/PaymentIcons";
 import { getSiteSettings } from "@/lib/site.functions";
 
-const BRANDS = [
-  "Sub-Zero",
-  "Wolf",
-  "Viking",
-  "Thermador",
-  "Bosch",
-  "Dacor",
-  "GE Monogram",
-  "Bertazzoni",
-];
-
 const AREAS = [
   "Staten Island",
   "Brooklyn",
@@ -261,39 +250,11 @@ export function SiteFooter() {
         </div>
       </div>
 
-      {/* Brands we service — moved here from the homepage so it doesn't
-          compete with the hero/advantages sections for space. Animated as
-          an infinite marquee (paused on hover); the sr-only list keeps the
-          brand names readable to screen readers and search engines without
-          announcing the duplicated scroll copy. */}
-      <div className="border-t border-white/10 py-6">
-        <span className="sr-only">Brands we service: {BRANDS.join(", ")}</span>
-        <div className="marquee-edge-fade overflow-hidden" aria-hidden="true">
-          <div className="animate-marquee flex w-max items-center">
-            {[0, 1].map((rep) => (
-              <div key={rep} className="flex items-center">
-                {BRANDS.map((b) => (
-                  <span key={`${rep}-${b}`} className="flex items-center gap-3 px-6">
-                    <span className="font-display text-lg font-semibold tracking-tight text-primary-foreground whitespace-nowrap md:text-xl">
-                      {b}
-                    </span>
-                    <span
-                      aria-hidden
-                      className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-accent"
-                    />
-                  </span>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
       <div className="border-t border-white/10">
         <div className="mx-auto max-w-7xl px-4 py-5 text-xs text-primary-foreground/60 md:px-8">
           <span>
-            © {year} Best Sub-Zero &amp; Viking Service. All rights reserved. Independent Sub-Zero
-            Appliance Care | Not Affiliated with SUB-ZERO GROUP INC.
+            © {year} Best Sub-Zero &amp; Viking Service. All rights reserved. Independent appliance
+            repair service. Not affiliated with Sub-Zero Group, Inc. or Viking Range, LLC.
           </span>
         </div>
       </div>

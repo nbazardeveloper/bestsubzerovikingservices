@@ -295,7 +295,8 @@
     animation: route-progress-sweep 1.1s ease-in-out infinite;
   }
 
-  /* Brand-strip marquee (see SiteFooter). The track renders the brand list
+  /* Brand-strip marquee (see BrandsMarquee, shown after the homepage hero).
+     The track renders the brand list
      twice back-to-back and scrolls exactly 50% of its own width — since
      both halves are identical, the loop point is invisible. Paused on
      hover so it's readable on demand, and disabled entirely for

@@ -27,7 +27,7 @@ const FAQ = [
   },
   {
     q: "Which brands do you service?",
-    a: "We specialize in Sub-Zero, Viking and Wolf. For ranges, stoves, cooktops and ovens, we repair all brands — for refrigeration and other equipment, we also service other premium residential brands including Thermador, Bosch, Dacor, GE Monogram and Bertazzoni.",
+    a: "We specialize in Sub-Zero, Viking and Wolf — across ranges, stoves, cooktops, ovens and refrigeration. We also service other premium residential brands including Thermador, Bosch, Dacor, GE Monogram and Bertazzoni.",
   },
   {
     q: "Which appliances or brands do you NOT service?",

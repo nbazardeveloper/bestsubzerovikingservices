@@ -17,15 +17,17 @@
 // build-time copy of the same value, protected by Supabase Row Level
 // Security, not by secrecy). SITE_URL is just the public site domain.
 //
-// Do NOT add SUPABASE_SERVICE_ROLE_KEY or SORO_WEBHOOK_SECRET here — those
-// are real secrets (service role bypasses Row Level Security entirely; the
-// webhook secret authenticates inbound requests) and must never be
-// committed to git. Set those in the Cloudflare dashboard as a "Secret"
-// (encrypted), not a plaintext "Environment Variable" — Secrets are stored
-// independently of the deployed code/config and are NOT wiped by rebuilds,
-// which is exactly what plaintext dashboard vars are missing here. See
-// Settings -> Variables and Secrets on the Worker in the Cloudflare
-// dashboard, and use "Secret" as the type when adding them.
+// Do NOT add SUPABASE_SERVICE_ROLE_KEY, SORO_WEBHOOK_SECRET, or
+// GHL_WEBHOOK_URL here — those are real secrets (service role bypasses Row
+// Level Security entirely; the webhook secret authenticates inbound
+// requests; the GHL webhook URL itself acts as the auth token for pushing
+// leads into the CRM) and must never be committed to git. Set those in the
+// Cloudflare dashboard as a "Secret" (encrypted), not a plaintext
+// "Environment Variable" — Secrets are stored independently of the deployed
+// code/config and are NOT wiped by rebuilds, which is exactly what
+// plaintext dashboard vars are missing here. See Settings -> Variables and
+// Secrets on the Worker in the Cloudflare dashboard, and use "Secret" as the
+// type when adding them.
 {
   "vars": {
     "SUPABASE_URL": "https://iuthigfkpmrppknefnju.supabase.co",

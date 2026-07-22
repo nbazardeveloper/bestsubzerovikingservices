@@ -17,10 +17,10 @@ const STATUS_STYLES: Record<string, string> = {
   done: "bg-secondary text-secondary-foreground",
 };
 
-// Every lead-capture form on the public site (Contact page + the chat
-// widget) writes to the same `leads` table via submitLead() — this page is
-// the one place to see and work all of them, regardless of which form they
-// came from (see the "Source" column, driven by source_page).
+// The Contact page form writes to the `leads` table via submitLead() — this
+// page is where those submissions show up (see the "Source" column, driven
+// by source_page). Chat conversations from the GoHighLevel widget go
+// straight to the CRM and do NOT appear here.
 function LeadsAdmin() {
   const qc = useQueryClient();
   const { data = [], isLoading } = useQuery({
@@ -44,7 +44,7 @@ function LeadsAdmin() {
       <header className="mb-8">
         <h1 className="text-3xl font-semibold tracking-tight">Leads</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Submissions from the Contact page form and the site chat widget.
+          Submissions from the Contact page form. Chat widget conversations go straight to the CRM.
         </p>
       </header>
 

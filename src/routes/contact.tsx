@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { absUrl, DEFAULT_OG_IMAGE } from "@/lib/seo";
 import { useQuery } from "@tanstack/react-query";
-import { Phone, Mail, MessageCircle, MapPin, CalendarClock } from "lucide-react";
+import { Phone, Mail, MessageCircle, MapPin, CalendarClock, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { GuaranteeBadge } from "@/components/site/GuaranteeBadge";
 import { ReviewsBar } from "@/components/site/ReviewsBar";
@@ -27,7 +27,7 @@ export const Route = createFileRoute("/contact")({
       {
         name: "description",
         content:
-          "Call (888) 702-8565 or request service online for premium appliance repair across Staten Island, Brooklyn, Queens, Long Island near Queens and North and Central NJ.",
+          "Call (888) 702-8565 or request service online for premium appliance repair across Staten Island, Brooklyn, Queens and North & Central NJ.",
       },
       { property: "og:title", content: "Contact Best Sub-Zero & Viking Service" },
       { property: "og:description", content: "Get in touch to schedule a diagnostic or repair." },
@@ -178,7 +178,11 @@ function Contact() {
           </div>
 
           <div className="rounded-lg border border-border bg-card p-6">
-            <h3 className="text-sm font-semibold">Diagnostic fee</h3>
+            <h3 className="flex items-center gap-2 text-sm font-semibold">
+              <Clock className="h-4 w-4 text-accent" /> Business hours
+            </h3>
+            <p className="mt-2 text-sm text-muted-foreground">24/7 Live Operator Service</p>
+            <h3 className="mt-6 text-sm font-semibold">Diagnostic fee</h3>
             <p className="mt-2 text-sm text-muted-foreground">
               {s?.diagnostic_fee ?? "$95, waived when the repair is completed."}
             </p>

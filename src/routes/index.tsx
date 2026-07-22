@@ -8,6 +8,7 @@ import { GuaranteeBadge } from "@/components/site/GuaranteeBadge";
 import { AnniversaryBadge } from "@/components/site/AnniversaryBadge";
 import { ReviewsBar } from "@/components/site/ReviewsBar";
 import { SpecialistBrandsBand } from "@/components/site/SpecialistBrandsBand";
+import { BrandsMarquee } from "@/components/site/BrandsMarquee";
 import { TestimonialCarousel } from "@/components/site/TestimonialCarousel";
 import { LazyYouTubeBackground } from "@/components/site/LazyYouTubeBackground";
 import { FinalCta } from "@/components/site/FinalCta";
@@ -114,7 +115,7 @@ export const Route = createFileRoute("/")({
         {
           name: "description",
           content:
-            "Premium repair for Sub-Zero, Viking, Wolf and other high-end kitchen appliances across Staten Island, Brooklyn, Queens, Long Island near Queens and New Jersey. Call today.",
+            "Premium repair for Sub-Zero, Viking, Wolf and other high-end kitchen appliances across Staten Island, Brooklyn, Queens and New Jersey. Call today.",
         },
         { property: "og:title", content: "Best Sub-Zero & Viking Service" },
         {
@@ -232,6 +233,8 @@ function Home() {
           <AnniversaryBadge className="absolute bottom-4 right-4 hidden md:flex md:bottom-8 md:right-8" />
         </div>
       </section>
+
+      <BrandsMarquee />
 
       <SpecialistBrandsBand />
 

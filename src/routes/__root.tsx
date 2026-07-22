@@ -14,7 +14,6 @@ import { CalendarClock } from "lucide-react";
 import appCss from "../styles.css?url";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
-import { ChatWidget } from "@/components/site/ChatWidget";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { getSiteSettings } from "@/lib/site.functions";
@@ -123,6 +122,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "apple-touch-icon", href: "/favicon-512.png" },
     ],
     scripts: [
+      // GoHighLevel (LeadConnector) chat widget — replaces the site's old
+      // custom ChatWidget. Chat conversations captured here go straight to
+      // the CRM directly through GHL, not through Supabase, so they won't
+      // show up in /admin/leads (only the /contact form does).
+      {
+        src: "https://widgets.leadconnectorhq.com/loader.js",
+        "data-resources-url": "https://widgets.leadconnectorhq.com/chat-widget/loader.js",
+        "data-widget-id": "6931f74fe96b4e66a8694988",
+      },
       {
         type: "application/ld+json",
         children: JSON.stringify({
@@ -220,7 +228,6 @@ function RootComponent() {
           </Link>
         </div>
       )}
-      {!hideChrome && <ChatWidget />}
       <Suspense fallback={null}>
         <Toaster position="top-right" richColors closeButton />
       </Suspense>
