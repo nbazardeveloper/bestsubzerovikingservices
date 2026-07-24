@@ -5,14 +5,20 @@
 // it reads immediately after the hero instead of only showing up once a
 // visitor scrolls all the way down.
 const BRANDS = [
-  "Sub-Zero",
-  "Wolf",
-  "Viking",
-  "Thermador",
+  "Bertazzoni",
   "Bosch",
   "Dacor",
   "GE Monogram",
-  "Bertazzoni",
+  "Hoshizaki",
+  "KitchenAid",
+  "Manitowoc",
+  "Marvel",
+  "Scotsman",
+  "Sub-Zero",
+  "Thermador",
+  "U-Line",
+  "Viking",
+  "Wolf",
 ];
 
 export function BrandsMarquee({ className }: { className?: string }) {
