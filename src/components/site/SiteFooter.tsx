@@ -49,10 +49,11 @@ export function SiteFooter() {
         <div className="min-w-0">
           <div className="flex items-center gap-3">
             <img
-              src="/images/logo.webp"
+              src="/images/logo-sm.webp"
               alt=""
-              width={395}
-              height={420}
+              width={104}
+              height={110}
+              loading="lazy"
               className="h-10 w-auto flex-shrink-0"
             />
             <span className="text-sm font-semibold">Best Sub-Zero &amp; Viking Service</span>
@@ -256,6 +257,10 @@ export function SiteFooter() {
             <img
               src="https://patch.com/api_v1/bizpost/574012/badge"
               alt="Best Sub-Zero & Viking Service on Patch"
+              width={340}
+              height={160}
+              loading="lazy"
+              decoding="async"
             />
           </a>
         </div>

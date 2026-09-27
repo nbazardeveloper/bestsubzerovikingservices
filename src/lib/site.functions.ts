@@ -33,6 +33,29 @@ function serverPublicClient() {
   });
 }
 
+// Short-lived per-isolate cache for the public reads every page render needs
+// (site settings on every page; featured services/projects on the homepage).
+// Without it each SSR request waited on 1–3 Supabase round trips before
+// sending any HTML, which showed up directly as server response time (TTFB)
+// in PageSpeed. 60s keeps admin edits appearing within a minute.
+const PUBLIC_CACHE_TTL_MS = 60_000;
+const publicCache = new Map<string, { at: number; value: Promise<unknown> }>();
+
+function cachedPublic<T>(key: string, load: () => Promise<T>): Promise<T> {
+  const hit = publicCache.get(key);
+  if (hit && Date.now() - hit.at < PUBLIC_CACHE_TTL_MS) return hit.value as Promise<T>;
+  const value = load();
+  publicCache.set(key, { at: Date.now(), value });
+  // Never keep a failed lookup around — the next request retries.
+  value.catch(() => publicCache.delete(key));
+  return value;
+}
+
+/** Called after admin writes so this isolate serves fresh data immediately. */
+export function clearPublicCache() {
+  publicCache.clear();
+}
+
 export type SiteSettings = {
   business_name: string;
   phone: string;
@@ -50,25 +73,29 @@ export type SiteSettings = {
 export const getSiteSettings = createServerFn({ method: "GET" }).handler(
   async (): Promise<SiteSettings> => {
     if (DB_STUBBED) return mockSiteSettings;
-    const s = serverPublicClient();
-    const { data, error } = await s.from("site_settings").select("*").eq("id", 1).maybeSingle();
-    if (error) throw new Error(error.message);
-    if (!data) throw new Error("Site settings missing");
-    return {
-      business_name: data.business_name,
-      phone: data.phone,
-      email: data.email,
-      address: data.address,
-      hours: data.hours,
-      diagnostic_fee: data.diagnostic_fee,
-      social_links: (data.social_links as Record<string, string>) ?? {},
-      review_count: data.review_count,
-      review_rating: data.review_rating,
-      yelp_review_count: data.yelp_review_count,
-      yelp_review_rating: data.yelp_review_rating,
-    };
+    return cachedPublic("site-settings", loadSiteSettings);
   },
 );
+
+async function loadSiteSettings(): Promise<SiteSettings> {
+  const s = serverPublicClient();
+  const { data, error } = await s.from("site_settings").select("*").eq("id", 1).maybeSingle();
+  if (error) throw new Error(error.message);
+  if (!data) throw new Error("Site settings missing");
+  return {
+    business_name: data.business_name,
+    phone: data.phone,
+    email: data.email,
+    address: data.address,
+    hours: data.hours,
+    diagnostic_fee: data.diagnostic_fee,
+    social_links: (data.social_links as Record<string, string>) ?? {},
+    review_count: data.review_count,
+    review_rating: data.review_rating,
+    yelp_review_count: data.yelp_review_count,
+    yelp_review_rating: data.yelp_review_rating,
+  };
+}
 
 export const listServices = createServerFn({ method: "GET" }).handler(async () => {
   if (DB_STUBBED) return mockServices;
@@ -84,15 +111,17 @@ export const listServices = createServerFn({ method: "GET" }).handler(async () =
 
 export const listFeaturedServices = createServerFn({ method: "GET" }).handler(async () => {
   if (DB_STUBBED) return mockServices.filter((s) => s.is_featured);
-  const s = serverPublicClient();
-  const { data, error } = await s
-    .from("services")
-    .select("*")
-    .eq("is_published", true)
-    .eq("is_featured", true)
-    .order("sort_order", { ascending: true });
-  if (error) throw new Error(error.message);
-  return data ?? [];
+  return cachedPublic("featured-services", async () => {
+    const s = serverPublicClient();
+    const { data, error } = await s
+      .from("services")
+      .select("*")
+      .eq("is_published", true)
+      .eq("is_featured", true)
+      .order("sort_order", { ascending: true });
+    if (error) throw new Error(error.message);
+    return data ?? [];
+  });
 });
 
 export const getServiceBySlug = createServerFn({ method: "GET" })
@@ -124,15 +153,17 @@ export const listProjects = createServerFn({ method: "GET" }).handler(async () =
 
 export const listFeaturedProjects = createServerFn({ method: "GET" }).handler(async () => {
   if (DB_STUBBED) return mockProjects.slice(0, 3);
-  const s = serverPublicClient();
-  const { data, error } = await s
-    .from("projects")
-    .select("*")
-    .eq("is_published", true)
-    .order("created_at", { ascending: false })
-    .limit(3);
-  if (error) throw new Error(error.message);
-  return data ?? [];
+  return cachedPublic("featured-projects", async () => {
+    const s = serverPublicClient();
+    const { data, error } = await s
+      .from("projects")
+      .select("*")
+      .eq("is_published", true)
+      .order("created_at", { ascending: false })
+      .limit(3);
+    if (error) throw new Error(error.message);
+    return data ?? [];
+  });
 });
 
 export const listBlogPosts = createServerFn({ method: "GET" }).handler(async () => {

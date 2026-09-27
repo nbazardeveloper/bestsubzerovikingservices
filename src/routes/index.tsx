@@ -129,7 +129,26 @@ export const Route = createFileRoute("/")({
           content: "https://bestsubzerovikingservices.com/images/hero.webp",
         },
       ],
-      links: [{ rel: "canonical", href: absUrl("/") }],
+      links: [
+        { rel: "canonical", href: absUrl("/") },
+        // The hero image is the LCP element. It lives inside a <picture>, which
+        // React doesn't auto-preload, so without these the browser only finds
+        // it after parsing the body. `media` keeps each viewport to one file.
+        {
+          rel: "preload",
+          as: "image",
+          href: "/images/heromobil.webp",
+          media: "(max-width: 767px)",
+          fetchPriority: "high",
+        },
+        {
+          rel: "preload",
+          as: "image",
+          href: "/images/hero.webp",
+          media: "(min-width: 768px)",
+          fetchPriority: "high",
+        },
+      ],
       scripts: [
         {
           type: "application/ld+json",

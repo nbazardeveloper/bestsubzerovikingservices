@@ -51,7 +51,26 @@ export default defineConfig(({ command }) => ({
       server: { entry: "server" },
     }),
     // Deploy adapter — only needed when producing a build, not during `vite dev`.
-    ...(command === "build" ? [nitro({ preset: "cloudflare-module" })] : []),
+    // routeRules headers are written into Cloudflare's _headers file. Files
+    // in public/ aren't content-hashed, so images get 30 days (+ SWR) rather
+    // than `immutable`; fonts effectively never change.
+    ...(command === "build"
+      ? [
+          nitro({
+            preset: "cloudflare-module",
+            routeRules: {
+              "/images/**": {
+                headers: {
+                  "cache-control": "public, max-age=2592000, stale-while-revalidate=86400",
+                },
+              },
+              "/fonts/**": {
+                headers: { "cache-control": "public, max-age=31536000, immutable" },
+              },
+            },
+          }),
+        ]
+      : []),
     viteReact(),
   ],
 }));

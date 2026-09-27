@@ -3,6 +3,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import type { Database } from "@/integrations/supabase/types";
 import { DB_STUBBED, mockServices, mockProjects } from "./db-stub";
+import { clearPublicCache } from "./site.functions";
 
 // While DB_STUBBED is true, mock lists/writes below are mutated in-memory
 // per server process (resets on restart). Fine for local UI testing only.
@@ -148,6 +149,7 @@ export const adminSaveService = createServerFn({ method: "POST" })
       const { error } = await context.supabase.from("services").insert(payload);
       if (error) throw new Error(error.message);
     }
+    clearPublicCache();
     return { ok: true };
   });
 
@@ -162,6 +164,7 @@ export const adminDeleteService = createServerFn({ method: "POST" })
     }
     const { error } = await context.supabase.from("services").delete().eq("id", data.id);
     if (error) throw new Error(error.message);
+    clearPublicCache();
     return { ok: true };
   });
 
@@ -226,6 +229,7 @@ export const adminSaveProject = createServerFn({ method: "POST" })
       const { error } = await context.supabase.from("projects").insert(payload);
       if (error) throw new Error(error.message);
     }
+    clearPublicCache();
     return { ok: true };
   });
 
@@ -240,6 +244,7 @@ export const adminDeleteProject = createServerFn({ method: "POST" })
     }
     const { error } = await context.supabase.from("projects").delete().eq("id", data.id);
     if (error) throw new Error(error.message);
+    clearPublicCache();
     return { ok: true };
   });
 
@@ -285,6 +290,7 @@ export const adminUpdateSettings = createServerFn({ method: "POST" })
       })
       .eq("id", 1);
     if (error) throw new Error(error.message);
+    clearPublicCache();
     return { ok: true };
   });
 

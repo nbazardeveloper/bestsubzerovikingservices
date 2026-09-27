@@ -15,7 +15,6 @@ import appCss from "../styles.css?url";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
 import { getSiteSettings } from "@/lib/site.functions";
 import { cn } from "@/lib/utils";
 
@@ -102,8 +101,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       // Fonts are self-hosted (see styles.css) and preloaded here so they
-      // start fetching immediately instead of waiting for the CSS that
-      // references them to be discovered.
+      // arrive before first paint — without the preload the late font swap
+      // caused layout shift (CLS).
       {
         rel: "preload",
         href: "/fonts/montserrat-latin.woff2",
@@ -123,42 +122,36 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "apple-touch-icon", href: "/favicon-512.png" },
     ],
     scripts: [
-      // Google Tag Manager — placed first so it loads as high in <head> as
-      // possible, per Google's install instructions. The matching <noscript>
-      // fallback lives in RootShell, right after the opening <body> tag.
+      // Third-party tags — Google Tag Manager, Microsoft Advertising UET and
+      // the GoHighLevel (LeadConnector) chat widget — are deferred until the
+      // visitor first interacts with the page (scroll/tap/key/mouse) or 4s
+      // after `load`, whichever comes first. Loading them in <head> made the
+      // chat loader render-blocking and put ~500 KB of tag JS on the main
+      // thread before the hero could paint (mobile PageSpeed ~57, LCP 10s+).
+      // The dataLayer / uetq queues are created immediately, so any events
+      // pushed before the tags arrive are still delivered once they load.
+      // GTM's <noscript> fallback lives in RootShell. Chat conversations go
+      // straight to the CRM through GHL, not Supabase, so they won't show up
+      // in /admin/leads (only the /contact form does).
       {
-        children: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PKFXGLNV');`,
-      },
-      // Microsoft Advertising UET (Universal Event Tracking) — lets
-      // Microsoft Advertising see site visits and attribute conversions
-      // (calls, form submissions, etc.) back to Bing/Microsoft Ads clicks.
-      {
-        children: `(function(w,d,t,r,u){
-  var f,n,i;
-  w[u]=w[u]||[],f=function(){
-    var o={ti:"343195501", enableAutoSpaAdTracking:true};
-    o.q=w[u],w[u]=new UET(o),w[u].push("pageLoad")
-  },
-  n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){
-    var s=this.readyState;
-    s&&s!=="loaded"&&s!=="complete"||(f(),n.onload=n.onreadystatechange=null)
-  },
-  i=d.getElementsByTagName(t)[0],
-  i.parentNode.insertBefore(n,i)
-})(window,document,"script","https://bat.bing.com/bat.js","uetq");`,
-      },
-      // GoHighLevel (LeadConnector) chat widget — replaces the site's old
-      // custom ChatWidget. Chat conversations captured here go straight to
-      // the CRM directly through GHL, not through Supabase, so they won't
-      // show up in /admin/leads (only the /contact form does).
-      {
-        src: "https://widgets.leadconnectorhq.com/loader.js",
-        "data-resources-url": "https://widgets.leadconnectorhq.com/chat-widget/loader.js",
-        "data-widget-id": "6931f74fe96b4e66a8694988",
+        children: `(function(w,d){
+w.dataLayer=w.dataLayer||[];w.uetq=w.uetq||[];
+var done=false,evs=["scroll","pointerdown","touchstart","keydown","mousemove"];
+function add(src,attrs,onload){var s=d.createElement("script");s.async=true;s.src=src;
+if(attrs)for(var k in attrs)s.setAttribute(k,attrs[k]);if(onload)s.onload=onload;d.head.appendChild(s);}
+function run(){if(done)return;done=true;
+evs.forEach(function(e){w.removeEventListener(e,run,{passive:true});});
+w.dataLayer.push({"gtm.start":new Date().getTime(),event:"gtm.js"});
+add("https://www.googletagmanager.com/gtm.js?id=GTM-PKFXGLNV");
+add("https://bat.bing.com/bat.js",null,function(){
+var o={ti:"343195501",enableAutoSpaAdTracking:true};o.q=w.uetq;w.uetq=new UET(o);w.uetq.push("pageLoad");});
+add("https://widgets.leadconnectorhq.com/loader.js",{
+"data-resources-url":"https://widgets.leadconnectorhq.com/chat-widget/loader.js",
+"data-widget-id":"6931f74fe96b4e66a8694988"});}
+evs.forEach(function(e){w.addEventListener(e,run,{passive:true});});
+if(d.readyState==="complete")setTimeout(run,4000);
+else w.addEventListener("load",function(){setTimeout(run,4000);});
+})(window,document);`,
       },
       {
         type: "application/ld+json",
@@ -235,14 +228,27 @@ function RootComponent() {
     (m) => m.pathname.startsWith("/admin") || m.pathname.startsWith("/auth"),
   );
 
+  // Auth state only matters on /admin and /auth. The Supabase client (~150 KB
+  // of auth/realtime/storage SDK) is imported dynamically there, so public
+  // pages never download or execute it.
   useEffect(() => {
-    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
-      if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
-      router.invalidate();
-      if (event !== "SIGNED_OUT") queryClient.invalidateQueries();
+    if (!hideChrome) return;
+    let unsubscribe: (() => void) | undefined;
+    let cancelled = false;
+    void import("@/integrations/supabase/client").then(({ supabase }) => {
+      if (cancelled) return;
+      const { data: sub } = supabase.auth.onAuthStateChange((event) => {
+        if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
+        router.invalidate();
+        if (event !== "SIGNED_OUT") queryClient.invalidateQueries();
+      });
+      unsubscribe = () => sub.subscription.unsubscribe();
     });
-    return () => sub.subscription.unsubscribe();
-  }, [router, queryClient]);
+    return () => {
+      cancelled = true;
+      unsubscribe?.();
+    };
+  }, [hideChrome, router, queryClient]);
 
   return (
     <QueryClientProvider client={queryClient}>

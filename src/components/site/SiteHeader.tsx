@@ -41,6 +41,9 @@ export function SiteHeader() {
           <img
             src="/images/logo.webp"
             alt="Best Sub-Zero & Viking Service logo"
+            width={500}
+            height={532}
+            loading="lazy"
             className="h-full w-auto flex-shrink-0 py-3 drop-shadow-sm"
           />
         </Link>
@@ -51,10 +54,10 @@ export function SiteHeader() {
             doesn't get concatenated into a mismatched accessible name. */}
         <Link to="/" className="flex items-center gap-3 md:hidden">
           <img
-            src="/images/logo.webp"
+            src="/images/logo-sm.webp"
             alt=""
-            width={395}
-            height={420}
+            width={104}
+            height={110}
             className="h-12 w-auto flex-shrink-0"
           />
           <span className="text-base font-semibold tracking-tight">

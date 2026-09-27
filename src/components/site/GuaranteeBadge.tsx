@@ -23,6 +23,9 @@ export function GuaranteeBadge({ className, variant = "light" }: Props) {
       <img
         src="/images/guarantee-badge.avif"
         alt="Satisfaction guarantee badge"
+        width={48}
+        height={48}
+        loading="lazy"
         className="h-12 w-12 flex-shrink-0"
       />
       <div>
