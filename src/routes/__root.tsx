@@ -143,6 +143,7 @@ function run(){if(done)return;done=true;
 evs.forEach(function(e){w.removeEventListener(e,run,{passive:true});});
 w.dataLayer.push({"gtm.start":new Date().getTime(),event:"gtm.js"});
 add("https://www.googletagmanager.com/gtm.js?id=GTM-PKFXGLNV");
+add("https://www.googletagmanager.com/gtm.js?id=GTM-WL7LB5C5");
 add("https://bat.bing.com/bat.js",null,function(){
 var o={ti:"343195501",enableAutoSpaAdTracking:true};o.q=w.uetq;w.uetq=new UET(o);w.uetq.push("pageLoad");});
 add("https://widgets.leadconnectorhq.com/loader.js",{
@@ -208,6 +209,12 @@ function RootShell({ children }: { children: ReactNode }) {
         <noscript>
           <iframe
             src="https://www.googletagmanager.com/ns.html?id=GTM-PKFXGLNV"
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          />
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-WL7LB5C5"
             height="0"
             width="0"
             style={{ display: "none", visibility: "hidden" }}

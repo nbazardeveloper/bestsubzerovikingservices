@@ -65,8 +65,8 @@ function ServicesPage() {
           </p>
           <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
             We do not service LG, Samsung or Liebherr refrigerators, and we do not repair
-            dishwashers, washing machines or dryers. We provide repair and maintenance only — we do
-            not perform new appliance installations.
+            dishwashers. We provide repair and maintenance only — we do not perform new appliance
+            installations.
           </p>
         </div>
       </section>
