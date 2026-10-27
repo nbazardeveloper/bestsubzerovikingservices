@@ -91,6 +91,28 @@ export const getRouter = () => {
     router.subscribe("onBeforeNavigate", (evt) => {
       if (evt.pathChanged) window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     });
+
+    // Route code is split into hashed chunks (e.g. routes-BwREYPYV.js) that
+    // are fetched on navigation. Right after a deploy — or in a tab opened
+    // before one — the browser can ask for a chunk that isn't available,
+    // which surfaced as "TypeError: Failed to fetch dynamically imported
+    // module" and a broken page. Vite fires `vite:preloadError` for that;
+    // reloading picks up the current HTML and its matching chunks. The
+    // sessionStorage stamp limits it to one reload per 10s so a chunk that
+    // is genuinely missing can't put the page in a reload loop.
+    window.addEventListener("vite:preloadError", (event) => {
+      const key = "chunk-reload-at";
+      try {
+        const last = Number(sessionStorage.getItem(key) ?? 0);
+        if (Date.now() - last < 10_000) return;
+        sessionStorage.setItem(key, String(Date.now()));
+      } catch {
+        // Storage blocked — can't guard against a loop, so don't reload.
+        return;
+      }
+      event.preventDefault();
+      window.location.reload();
+    });
   }
 
   // Without this, the client's QueryClient starts with an empty cache on
