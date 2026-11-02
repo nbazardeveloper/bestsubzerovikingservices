@@ -7,9 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { submitLead } from "@/lib/site.functions";
 
-// Same booking widget used on /contact — reused here so a chat visitor can
-// go straight from "I have a question" to "I picked a time" without leaving
-// the conversation.
+// Same booking page used on /contact — linked here so a chat visitor can go
+// straight from "I have a question" to "I picked a time".
 const BOOKING_URL = "https://api.prosbuddy.com/widget/bookings/now-schedule-service";
 
 type Step = "name" | "phone" | "message" | "submitting" | "scheduler";
@@ -23,9 +22,9 @@ type ChatMessage = {
 // asks one thing at a time, replies appear as bubbles) but every answer
 // flows into the exact same submitLead() call — and therefore the same
 // `leads` table in Supabase — that the full Contact page form already
-// uses. No new vendor, no separate inbox to check. The last step embeds
-// the same ProsBuddy scheduler iframe as /contact so visitors can book a
-// time themselves before the conversation even ends.
+// uses. No new vendor, no separate inbox to check. The last step links to
+// the same ProsBuddy scheduler as /contact so visitors can book a time
+// themselves before the conversation even ends.
 export function ChatWidget() {
   const submit = useServerFn(submitLead);
   const [open, setOpen] = useState(false);
@@ -174,24 +173,11 @@ export function ChatWidget() {
 
             {step === "scheduler" ? (
               <div className="space-y-2 pt-1">
-                <div className="overflow-hidden rounded-lg border border-border">
-                  <iframe
-                    title="Book a service appointment online"
-                    src={BOOKING_URL}
-                    width="100%"
-                    height="360"
-                    className="border-0"
-                    loading="lazy"
-                  />
-                </div>
                 <div className="flex items-center justify-between gap-2">
-                  <a
-                    href={BOOKING_URL}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="inline-flex items-center gap-1.5 text-xs text-accent hover:underline"
-                  >
-                    <CalendarClock className="h-3.5 w-3.5" /> Open scheduler in a new tab
+                  <a href={BOOKING_URL}>
+                    <Button size="sm" className="gap-1.5">
+                      <CalendarClock className="h-3.5 w-3.5" /> Book online
+                    </Button>
                   </a>
                   <button
                     type="button"

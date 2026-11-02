@@ -75,8 +75,8 @@ function Contact() {
             Contact <span className="text-accent">us</span>
           </h1>
           <p className="mt-4 max-w-2xl text-muted-foreground">
-            Call, message on WhatsApp, or book online below. Please have your appliance's model
-            number, serial number and a brief problem description ready.
+            Call, message on WhatsApp, or book online. Please have your appliance's model number,
+            serial number and a brief problem description ready.
           </p>
         </div>
       </section>
@@ -84,55 +84,16 @@ function Contact() {
       <section className="mx-auto grid max-w-7xl gap-12 px-4 py-16 md:grid-cols-[3fr_2fr] md:px-8">
         <div>
           <div className="rounded-2xl border border-border bg-card p-6 md:p-8">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <h2 className="text-2xl font-semibold tracking-tight">Book your service</h2>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Pick a time that works for you — our online scheduler books your diagnostic
-                  appointment directly.
-                </p>
-              </div>
-              <a
-                href={BOOKING_URL}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="hidden sm:inline-flex"
-              >
-                <Button variant="outline" className="gap-2">
-                  <CalendarClock className="h-4 w-4" /> Open scheduler
-                </Button>
-              </a>
-            </div>
-            <div className="mt-6 overflow-hidden rounded-lg border border-border">
-              <iframe
-                title="Book a service appointment online"
-                src={BOOKING_URL}
-                width="100%"
-                height="720"
-                className="border-0"
-                loading="lazy"
-              />
-            </div>
-            <a
-              href={BOOKING_URL}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="mt-3 inline-flex text-sm text-accent hover:underline sm:hidden"
-            >
-              Open the scheduler in a new tab →
-            </a>
-            <p className="mt-3 text-xs text-muted-foreground">
-              Trouble loading the scheduler above?{" "}
-              <a
-                href={BOOKING_URL}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="text-accent hover:underline"
-              >
-                Open it in a new tab
-              </a>
-              .
+            <h2 className="text-2xl font-semibold tracking-tight">Book your service</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Pick a time that works for you — our online scheduler books your diagnostic
+              appointment directly.
             </p>
+            <a href={BOOKING_URL} className="mt-6 inline-flex">
+              <Button size="lg" className="gap-2">
+                <CalendarClock className="h-4 w-4" /> Book online
+              </Button>
+            </a>
           </div>
         </div>
 

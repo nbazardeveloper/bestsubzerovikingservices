@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as WolfApplianceRepairRouteImport } from './routes/wolf-appliance-repair'
 import { Route as VikingStoveRepairRouteImport } from './routes/viking-stove-repair'
 import { Route as VikingApplianceRepairRouteImport } from './routes/viking-appliance-repair'
+import { Route as ThankYouRouteImport } from './routes/thank-you'
 import { Route as SubzeroVikingWolfBrooklynRouteImport } from './routes/subzero-viking-wolf-brooklyn'
 import { Route as SubZeroVikingWolfRepairRouteImport } from './routes/sub-zero-viking-wolf-repair'
 import { Route as SubZeroRepairNycNjRouteImport } from './routes/sub-zero-repair-nyc-nj'
@@ -58,6 +59,11 @@ const VikingStoveRepairRoute = VikingStoveRepairRouteImport.update({
 const VikingApplianceRepairRoute = VikingApplianceRepairRouteImport.update({
   id: '/viking-appliance-repair',
   path: '/viking-appliance-repair',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ThankYouRoute = ThankYouRouteImport.update({
+  id: '/thank-you',
+  path: '/thank-you',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SubzeroVikingWolfBrooklynRoute =
@@ -248,6 +254,7 @@ export interface FileRoutesByFullPath {
   '/sub-zero-repair-nyc-nj': typeof SubZeroRepairNycNjRoute
   '/sub-zero-viking-wolf-repair': typeof SubZeroVikingWolfRepairRoute
   '/subzero-viking-wolf-brooklyn': typeof SubzeroVikingWolfBrooklynRoute
+  '/thank-you': typeof ThankYouRoute
   '/viking-appliance-repair': typeof VikingApplianceRepairRoute
   '/viking-stove-repair': typeof VikingStoveRepairRoute
   '/wolf-appliance-repair': typeof WolfApplianceRepairRoute
@@ -284,6 +291,7 @@ export interface FileRoutesByTo {
   '/sub-zero-repair-nyc-nj': typeof SubZeroRepairNycNjRoute
   '/sub-zero-viking-wolf-repair': typeof SubZeroVikingWolfRepairRoute
   '/subzero-viking-wolf-brooklyn': typeof SubzeroVikingWolfBrooklynRoute
+  '/thank-you': typeof ThankYouRoute
   '/viking-appliance-repair': typeof VikingApplianceRepairRoute
   '/viking-stove-repair': typeof VikingStoveRepairRoute
   '/wolf-appliance-repair': typeof WolfApplianceRepairRoute
@@ -321,6 +329,7 @@ export interface FileRoutesById {
   '/sub-zero-repair-nyc-nj': typeof SubZeroRepairNycNjRoute
   '/sub-zero-viking-wolf-repair': typeof SubZeroVikingWolfRepairRoute
   '/subzero-viking-wolf-brooklyn': typeof SubzeroVikingWolfBrooklynRoute
+  '/thank-you': typeof ThankYouRoute
   '/viking-appliance-repair': typeof VikingApplianceRepairRoute
   '/viking-stove-repair': typeof VikingStoveRepairRoute
   '/wolf-appliance-repair': typeof WolfApplianceRepairRoute
@@ -359,6 +368,7 @@ export interface FileRouteTypes {
     | '/sub-zero-repair-nyc-nj'
     | '/sub-zero-viking-wolf-repair'
     | '/subzero-viking-wolf-brooklyn'
+    | '/thank-you'
     | '/viking-appliance-repair'
     | '/viking-stove-repair'
     | '/wolf-appliance-repair'
@@ -395,6 +405,7 @@ export interface FileRouteTypes {
     | '/sub-zero-repair-nyc-nj'
     | '/sub-zero-viking-wolf-repair'
     | '/subzero-viking-wolf-brooklyn'
+    | '/thank-you'
     | '/viking-appliance-repair'
     | '/viking-stove-repair'
     | '/wolf-appliance-repair'
@@ -431,6 +442,7 @@ export interface FileRouteTypes {
     | '/sub-zero-repair-nyc-nj'
     | '/sub-zero-viking-wolf-repair'
     | '/subzero-viking-wolf-brooklyn'
+    | '/thank-you'
     | '/viking-appliance-repair'
     | '/viking-stove-repair'
     | '/wolf-appliance-repair'
@@ -469,6 +481,7 @@ export interface RootRouteChildren {
   SubZeroRepairNycNjRoute: typeof SubZeroRepairNycNjRoute
   SubZeroVikingWolfRepairRoute: typeof SubZeroVikingWolfRepairRoute
   SubzeroVikingWolfBrooklynRoute: typeof SubzeroVikingWolfBrooklynRoute
+  ThankYouRoute: typeof ThankYouRoute
   VikingApplianceRepairRoute: typeof VikingApplianceRepairRoute
   VikingStoveRepairRoute: typeof VikingStoveRepairRoute
   WolfApplianceRepairRoute: typeof WolfApplianceRepairRoute
@@ -499,6 +512,13 @@ declare module '@tanstack/react-router' {
       path: '/viking-appliance-repair'
       fullPath: '/viking-appliance-repair'
       preLoaderRoute: typeof VikingApplianceRepairRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/thank-you': {
+      id: '/thank-you'
+      path: '/thank-you'
+      fullPath: '/thank-you'
+      preLoaderRoute: typeof ThankYouRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/subzero-viking-wolf-brooklyn': {
@@ -781,6 +801,7 @@ const rootRouteChildren: RootRouteChildren = {
   SubZeroRepairNycNjRoute: SubZeroRepairNycNjRoute,
   SubZeroVikingWolfRepairRoute: SubZeroVikingWolfRepairRoute,
   SubzeroVikingWolfBrooklynRoute: SubzeroVikingWolfBrooklynRoute,
+  ThankYouRoute: ThankYouRoute,
   VikingApplianceRepairRoute: VikingApplianceRepairRoute,
   VikingStoveRepairRoute: VikingStoveRepairRoute,
   WolfApplianceRepairRoute: WolfApplianceRepairRoute,
